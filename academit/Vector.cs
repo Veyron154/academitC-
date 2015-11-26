@@ -9,8 +9,8 @@ namespace academit
     class Vector
     {
         private double[] vectorComponents;
-        
-        public Vector (int size)
+
+        public Vector(int size)
         {
             if (size <= 0)
             {
@@ -19,7 +19,7 @@ namespace academit
             this.vectorComponents = new double[size];
         }
 
-        public Vector (Vector copiedVector)
+        public Vector(Vector copiedVector)
         {
             this.vectorComponents = new double[copiedVector.vectorComponents.Length];
             for (int i = 0; i < this.vectorComponents.Length; ++i)
@@ -28,7 +28,7 @@ namespace academit
             }
         }
 
-        public Vector (int size, double[] vectorComponents)
+        public Vector(int size, double[] vectorComponents)
         {
             if (size <= 0)
             {
@@ -51,13 +51,13 @@ namespace academit
             }
         }
 
-        public Vector (double[] vectorComponents)
+        public Vector(double[] vectorComponents)
         {
             this.vectorComponents = vectorComponents;
         }
 
         override
-        public string ToString ()
+        public string ToString()
         {
             StringBuilder builder = new StringBuilder();
             builder.Append("{ ");
@@ -101,7 +101,7 @@ namespace academit
                 new Vector(ExtensionVector(vector1.vectorComponents, vector2.vectorComponents.Length));
             Vector auxiliaryVector2 = vector1.vectorComponents.Length > vector2.vectorComponents.Length ?
                 new Vector(ExtensionVector(vector2.vectorComponents, vector1.vectorComponents.Length)) :
-                new Vector(vector2) ;
+                new Vector(vector2);
             for (int i = 0; i < auxiliaryVector1.vectorComponents.Length; ++i)
             {
                 auxiliaryVector1.vectorComponents[i] -= auxiliaryVector2.vectorComponents[i];
@@ -149,7 +149,7 @@ namespace academit
         public Vector Turn()
         {
             const int TURN_COEFFICIENT = -1;
-            return this.MultiplyByScalar(TURN_COEFFICIENT); 
+            return this.MultiplyByScalar(TURN_COEFFICIENT);
         }
 
         public double GetLength()
@@ -199,7 +199,7 @@ namespace academit
                     return false;
                 }
             }
-           
+
             return true;
         }
 

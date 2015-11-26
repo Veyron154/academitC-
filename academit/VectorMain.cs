@@ -8,7 +8,7 @@ namespace academit
 {
     class Class1
     {
-        public static void Main (string[] args)
+        public static void Main(string[] args)
         {
             double[] d1 = new double[3];
             d1[0] = 1;
@@ -26,7 +26,6 @@ namespace academit
             Console.WriteLine(vector.MultiplyByScalar(10));
             Console.WriteLine(vector.Turn());
             Console.ReadKey();
-        
         }
     }
 }
