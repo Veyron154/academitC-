@@ -1,67 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace academit
+namespace Academit.Vector
 {
-    class Vector
+    internal class Vector
     {
-        private double[] vectorComponents;
+        private const string ExeptionText = "Размерность вектора должна быть больше нуля";
+        private double[] _vectorComponents;
 
         public Vector(int size)
         {
             if (size <= 0)
             {
-                throw new ArgumentOutOfRangeException("Размерность вектора должна быть больше нуля");
+                throw new ArgumentOutOfRangeException(ExeptionText);
             }
-            this.vectorComponents = new double[size];
+            _vectorComponents = new double[size];
         }
 
         public Vector(Vector copiedVector)
         {
-            this.vectorComponents = new double[copiedVector.vectorComponents.Length];
-            for (int i = 0; i < this.vectorComponents.Length; ++i)
+            _vectorComponents = new double[copiedVector._vectorComponents.Length];
+            for (var i = 0; i < _vectorComponents.Length; ++i)
             {
-                this.vectorComponents[i] = copiedVector.vectorComponents[i];
+                _vectorComponents[i] = copiedVector._vectorComponents[i];
             }
         }
 
-        public Vector(int size, double[] vectorComponents)
+        public Vector(int size, IReadOnlyList<double> vectorComponents)
         {
             if (size <= 0)
             {
-                throw new ArgumentOutOfRangeException("Размерность вектора должна быть больше нуля");
+                throw new ArgumentOutOfRangeException(ExeptionText);
             }
-            this.vectorComponents = new Double[size];
-            if (vectorComponents.Length < size)
+            _vectorComponents = new double[size];
+            if (vectorComponents.Count < size)
             {
-                for (int i = 0; i < vectorComponents.Length; ++i)
+                for (var i = 0; i < vectorComponents.Count; ++i)
                 {
-                    this.vectorComponents[i] = vectorComponents[i];
+                    _vectorComponents[i] = vectorComponents[i];
                 }
             }
             else
             {
-                for (int i = 0; i < size; ++i)
+                for (var i = 0; i < size; ++i)
                 {
-                    this.vectorComponents[i] = vectorComponents[i];
+                    _vectorComponents[i] = vectorComponents[i];
                 }
             }
         }
 
         public Vector(double[] vectorComponents)
         {
-            this.vectorComponents = vectorComponents;
+            _vectorComponents = vectorComponents;
         }
 
-        override
-        public string ToString()
+       
+        public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("{ ");
-            foreach (double d in this.vectorComponents)
+            foreach (var d in _vectorComponents)
             {
                 builder.Append(d)
                     .Append(", ");
@@ -72,14 +73,14 @@ namespace academit
 
         public static Vector Addition(Vector vector1, Vector vector2)
         {
-            Vector auxiliaryVector1 = vector1.vectorComponents.Length > vector2.vectorComponents.Length ?
+            var auxiliaryVector1 = vector1._vectorComponents.Length > vector2._vectorComponents.Length ?
                 new Vector(vector1) : new Vector(vector2);
-            Vector auxiliaryVector2 = vector1.vectorComponents.Length > vector2.vectorComponents.Length ?
-                new Vector(ExtensionVector(vector2.vectorComponents, vector1.vectorComponents.Length)) :
-                new Vector(ExtensionVector(vector1.vectorComponents, vector2.vectorComponents.Length));
-            for (int i = 0; i < auxiliaryVector1.vectorComponents.Length; ++i)
+            var auxiliaryVector2 = vector1._vectorComponents.Length > vector2._vectorComponents.Length ?
+                new Vector(ExtensionVector(vector2._vectorComponents, vector1._vectorComponents.Length)) :
+                new Vector(ExtensionVector(vector1._vectorComponents, vector2._vectorComponents.Length));
+            for (var i = 0; i < auxiliaryVector1._vectorComponents.Length; ++i)
             {
-                auxiliaryVector1.vectorComponents[i] += auxiliaryVector2.vectorComponents[i];
+                auxiliaryVector1._vectorComponents[i] += auxiliaryVector2._vectorComponents[i];
             }
             return auxiliaryVector1;
         }
@@ -96,15 +97,15 @@ namespace academit
 
         public static Vector Subtraction(Vector vector1, Vector vector2)
         {
-            Vector auxiliaryVector1 = vector1.vectorComponents.Length > vector2.vectorComponents.Length ?
+            Vector auxiliaryVector1 = vector1._vectorComponents.Length > vector2._vectorComponents.Length ?
                 new Vector(vector1) :
-                new Vector(ExtensionVector(vector1.vectorComponents, vector2.vectorComponents.Length));
-            Vector auxiliaryVector2 = vector1.vectorComponents.Length > vector2.vectorComponents.Length ?
-                new Vector(ExtensionVector(vector2.vectorComponents, vector1.vectorComponents.Length)) :
+                new Vector(ExtensionVector(vector1._vectorComponents, vector2._vectorComponents.Length));
+            Vector auxiliaryVector2 = vector1._vectorComponents.Length > vector2._vectorComponents.Length ?
+                new Vector(ExtensionVector(vector2._vectorComponents, vector1._vectorComponents.Length)) :
                 new Vector(vector2);
-            for (int i = 0; i < auxiliaryVector1.vectorComponents.Length; ++i)
+            for (int i = 0; i < auxiliaryVector1._vectorComponents.Length; ++i)
             {
-                auxiliaryVector1.vectorComponents[i] -= auxiliaryVector2.vectorComponents[i];
+                auxiliaryVector1._vectorComponents[i] -= auxiliaryVector2._vectorComponents[i];
             }
             return auxiliaryVector1;
         }
@@ -112,68 +113,63 @@ namespace academit
         public static double ScalarMultiply(Vector vector1, Vector vector2)
         {
             double sum = 0;
-            int minLength = Math.Min(vector1.vectorComponents.Length, vector2.vectorComponents.Length);
-            for (int i = 0; i < minLength; ++i)
+            var minLength = Math.Min(vector1._vectorComponents.Length, vector2._vectorComponents.Length);
+            for (var i = 0; i < minLength; ++i)
             {
-                sum += vector1.vectorComponents[i] * vector2.vectorComponents[i];
+                sum += vector1._vectorComponents[i] * vector2._vectorComponents[i];
             }
             return sum;
         }
 
         public int GetSize()
         {
-            return this.vectorComponents.Length;
+            return _vectorComponents.Length;
         }
 
         public Vector Addition(Vector addedVector)
         {
-            this.vectorComponents = Addition(this, addedVector).vectorComponents;
+            _vectorComponents = Addition(this, addedVector)._vectorComponents;
             return this;
         }
 
         public Vector Subtraction(Vector deductibleVector)
         {
-            this.vectorComponents = Subtraction(this, deductibleVector).vectorComponents;
+            _vectorComponents = Subtraction(this, deductibleVector)._vectorComponents;
             return this;
         }
 
         public Vector MultiplyByScalar(double scalar)
         {
-            for (int i = 0; i < this.vectorComponents.Length; ++i)
+            for (var i = 0; i < _vectorComponents.Length; ++i)
             {
-                this.vectorComponents[i] *= scalar;
+                _vectorComponents[i] *= scalar;
             }
             return this;
         }
 
         public Vector Turn()
         {
-            const int TURN_COEFFICIENT = -1;
-            return this.MultiplyByScalar(TURN_COEFFICIENT);
+            const int turnCoefficient = -1;
+            return MultiplyByScalar(turnCoefficient);
         }
 
         public double GetLength()
         {
-            double sumOfSqares = 0;
-            for (int i = 0; i < this.vectorComponents.Length; ++i)
-            {
-                sumOfSqares += Math.Pow(this.vectorComponents[i], 2);
-            }
+            var sumOfSqares = _vectorComponents.Sum(t => Math.Pow(t, 2));
             return Math.Sqrt(sumOfSqares);
         }
 
         public void SetVectorComponent(int indexOfComponent, double valueOfComponent)
         {
-            this.vectorComponents[indexOfComponent] = valueOfComponent;
+            _vectorComponents[indexOfComponent] = valueOfComponent;
         }
 
         public double GetVectorComponent(int indexOfComponent)
         {
-            return this.vectorComponents[indexOfComponent];
+            return _vectorComponents[indexOfComponent];
         }
 
-        override
-        public bool Equals(object comparedObject)
+        public override bool Equals(object comparedObject)
         {
             if (this == comparedObject)
             {
@@ -183,37 +179,25 @@ namespace academit
             {
                 return false;
             }
-            if (this.GetType() != comparedObject.GetType())
+            if (GetType() != comparedObject.GetType())
             {
                 return false;
             }
-            Vector comparedVector = comparedObject as Vector;
-            if (this.vectorComponents.Length != comparedVector.vectorComponents.Length)
+            var comparedVector = comparedObject as Vector;
+            if (comparedVector != null && _vectorComponents.Length != comparedVector._vectorComponents.Length)
             {
                 return false;
             }
-            for (int i = 0; i < this.vectorComponents.Length; ++i)
-            {
-                if (!UserFunctions.IsEquals(this.vectorComponents[i], comparedVector.vectorComponents[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return _vectorComponents.Where((t, i) => comparedVector != null && !UserFunctions.IsEquals(t, comparedVector._vectorComponents[i])).Any();
         }
 
-        override
-        public int GetHashCode()
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
+        public override int GetHashCode()
         {
-            const int PRIME = 31;
-            int result = 1;
-            result = result * PRIME + this.vectorComponents.Length;
-            for (int i = 0; i < this.vectorComponents.Length; ++i)
-            {
-                result = result * PRIME + (int)(this.vectorComponents[i] / UserFunctions.EPSILON);
-            }
-            return result;
+            const int prime = 31;
+            var result = 1;
+            result = result * prime + _vectorComponents.Length;
+            return _vectorComponents.Aggregate(result, (current, t) => current*prime + (int) (t/UserFunctions.Epsilon));
         }
     }
 }

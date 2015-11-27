@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace academit
+namespace Academit.Vector
 {
-    class Class1
+    internal class Class1
     {
         public static void Main(string[] args)
         {
-            double[] d1 = new double[3];
+            var d1 = new double[3];
             d1[0] = 1;
             d1[1] = 2;
             d1[2] = 3;
 
-            Vector vector = new Vector(4, d1);
-            Vector vector2 = new Vector(5, d1);
+            var vector = new Vector(4, d1);
+            var vector2 = new Vector(5, d1);
 
             Console.WriteLine(vector.Equals(d1));
             Console.WriteLine(vector.Addition(vector2).ToString());
