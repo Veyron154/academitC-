@@ -7,9 +7,10 @@ namespace Academit.Vector
         public static void Main(string[] args)
         {
             double[] d1 = {1, 2, 3};
+            double[] d2 = {1, 2, 3};
 
-            var vector = new Vector(4, d1);
-            var vector2 = new Vector(4, d1);
+            var vector = new Vector(3, d1);
+            var vector2 = new Vector(3, d2);
 
             Console.WriteLine(vector.Equals(vector2));
             Console.WriteLine(vector.Addition(vector2).ToString());
