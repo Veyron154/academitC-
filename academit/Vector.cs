@@ -188,8 +188,8 @@ namespace Academit.Vector
             {
                 return false;
             }
-            return !_vectorComponents.Where((t, i) => 
-            !UserFunctions.IsEquals(t, comparedVector._vectorComponents[i])).Any();
+            return _vectorComponents.Where((t, i) => 
+            UserFunctions.IsEquals(t, comparedVector._vectorComponents[i])).Any();      
         }
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
