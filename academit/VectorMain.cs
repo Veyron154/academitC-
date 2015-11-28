@@ -6,15 +6,12 @@ namespace Academit.Vector
     {
         public static void Main(string[] args)
         {
-            var d1 = new double[3];
-            d1[0] = 1;
-            d1[1] = 2;
-            d1[2] = 3;
+            double[] d1 = {1, 2, 3};
 
             var vector = new Vector(4, d1);
-            var vector2 = new Vector(5, d1);
+            var vector2 = new Vector(4, d1);
 
-            Console.WriteLine(vector.Equals(d1));
+            Console.WriteLine(vector.Equals(vector2));
             Console.WriteLine(vector.Addition(vector2).ToString());
             Console.WriteLine(vector.GetLength());
             Console.WriteLine(vector.GetSize());

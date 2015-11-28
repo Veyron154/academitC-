@@ -85,10 +85,10 @@ namespace Academit.Vector
             return auxiliaryVector1;
         }
 
-        private static double[] ExtensionVector(double[] vectorComponents, int size)
+        private static double[] ExtensionVector(IReadOnlyList<double> vectorComponents, int size)
         {
-            double[] auxiliaryArray = new double[size];
-            for (int i = 0; i < vectorComponents.Length; ++i)
+            var auxiliaryArray = new double[size];
+            for (var i = 0; i < vectorComponents.Count; ++i)
             {
                 auxiliaryArray[i] = vectorComponents[i];
             }
@@ -97,13 +97,13 @@ namespace Academit.Vector
 
         public static Vector Subtraction(Vector vector1, Vector vector2)
         {
-            Vector auxiliaryVector1 = vector1._vectorComponents.Length > vector2._vectorComponents.Length ?
+            var auxiliaryVector1 = vector1._vectorComponents.Length > vector2._vectorComponents.Length ?
                 new Vector(vector1) :
                 new Vector(ExtensionVector(vector1._vectorComponents, vector2._vectorComponents.Length));
-            Vector auxiliaryVector2 = vector1._vectorComponents.Length > vector2._vectorComponents.Length ?
+            var auxiliaryVector2 = vector1._vectorComponents.Length > vector2._vectorComponents.Length ?
                 new Vector(ExtensionVector(vector2._vectorComponents, vector1._vectorComponents.Length)) :
                 new Vector(vector2);
-            for (int i = 0; i < auxiliaryVector1._vectorComponents.Length; ++i)
+            for (var i = 0; i < auxiliaryVector1._vectorComponents.Length; ++i)
             {
                 auxiliaryVector1._vectorComponents[i] -= auxiliaryVector2._vectorComponents[i];
             }
@@ -183,12 +183,13 @@ namespace Academit.Vector
             {
                 return false;
             }
-            var comparedVector = comparedObject as Vector;
-            if (comparedVector != null && _vectorComponents.Length != comparedVector._vectorComponents.Length)
+            var comparedVector = (Vector)comparedObject;
+            if (_vectorComponents.Length != comparedVector._vectorComponents.Length)
             {
                 return false;
             }
-            return _vectorComponents.Where((t, i) => comparedVector != null && !UserFunctions.IsEquals(t, comparedVector._vectorComponents[i])).Any();
+            return !_vectorComponents.Where((t, i) => 
+            !UserFunctions.IsEquals(t, comparedVector._vectorComponents[i])).Any();
         }
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
