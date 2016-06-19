@@ -2,8 +2,9 @@
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using ChatClient.View;
 
-namespace ChatClient
+namespace ChatClient.Model
 {
     internal class Client : IClient
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace ChatClient
+namespace ChatClient.View
 {
     internal interface IChatForm
     {

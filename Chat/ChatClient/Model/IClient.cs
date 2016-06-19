@@ -1,10 +1,10 @@
 ﻿
-namespace ChatClient
+namespace ChatClient.Model
 {
     internal interface IClient
     {
         void Connect();
-        void SendMessage(string message);
         void Disconnect();
+        void SendMessage(string message);
     }
 }

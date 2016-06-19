@@ -1,8 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Windows.Forms;
+using ChatClient.Model;
 
-namespace ChatClient
+namespace ChatClient.View
 {
     public partial class ChatForm : Form, IChatForm
     {
@@ -74,6 +74,14 @@ namespace ChatClient
         private void ChatForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             client?.Disconnect();
+        }
+
+        private void ChatForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Enter)
+            {
+                sendButton_Click(sender, e);
+            }
         }
     }
 }

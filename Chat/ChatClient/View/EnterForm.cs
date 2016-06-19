@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ChatClient
+namespace ChatClient.View
 {
     public partial class EnterForm : Form
     {

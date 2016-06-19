@@ -1,4 +1,4 @@
-﻿namespace ChatClient
+﻿namespace ChatClient.View
 {
     partial class ChatForm
     {
@@ -41,16 +41,18 @@
             this.textField.Location = new System.Drawing.Point(12, 12);
             this.textField.Name = "textField";
             this.textField.ReadOnly = true;
-            this.textField.Size = new System.Drawing.Size(360, 211);
+            this.textField.Size = new System.Drawing.Size(360, 180);
             this.textField.TabIndex = 0;
             this.textField.Text = "";
             // 
             // textBox
             // 
             this.textBox.Enabled = false;
-            this.textBox.Location = new System.Drawing.Point(12, 229);
+            this.textBox.Location = new System.Drawing.Point(12, 199);
+            this.textBox.Multiline = true;
             this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(360, 20);
+            this.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox.Size = new System.Drawing.Size(360, 50);
             this.textBox.TabIndex = 1;
             // 
             // enterButton
@@ -107,10 +109,12 @@
             this.Controls.Add(this.enterButton);
             this.Controls.Add(this.textBox);
             this.Controls.Add(this.textField);
+            this.KeyPreview = true;
             this.Name = "ChatForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Чат";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChatForm_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChatForm_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
