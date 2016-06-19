@@ -48,8 +48,7 @@ namespace ChatServer
                 {
                     var tcpClient = listener.AcceptTcpClient();
                     var clientObject = new ClientObject(tcpClient, this);
-                    var clientThread = new Thread(clientObject.Process);
-                    clientThread.Start();
+                    clientObject.Start();
                 }
             }
             catch (Exception e)

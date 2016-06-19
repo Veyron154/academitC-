@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace ChatServer
 {
-    class ClientObject
+    internal class ClientObject
     {
         public string Id { get; private set; }
         public string Name { get; private set; }
@@ -18,6 +19,12 @@ namespace ChatServer
             this.server = server;
             server.AddClient(this);
             Id = Guid.NewGuid().ToString();
+        }
+
+        public void Start()
+        {
+            var thread = new Thread(Process);
+            thread.Start();
         }
 
         public void Process()
