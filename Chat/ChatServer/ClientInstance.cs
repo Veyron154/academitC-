@@ -69,7 +69,7 @@ namespace ChatServer
 
         private string GetMessage()
         {
-            var message = new byte[64];
+            var message = new byte[128];
             var builder = new StringBuilder();
 
             do

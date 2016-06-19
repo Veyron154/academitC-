@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -14,9 +15,9 @@ namespace ChatServer
         private readonly List<ClientInstance> clients;
         private readonly int port;
 
-        public Server(int port)
+        public Server()
         {
-            this.port = port;
+            this.port = int.Parse(ConfigurationManager.AppSettings["port"]);
             clients = new List<ClientInstance>();
         }
 
