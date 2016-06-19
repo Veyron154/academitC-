@@ -5,20 +5,17 @@ using System.Threading;
 
 namespace ChatServer
 {
-    internal class ClientObject
+    internal class ClientInstance
     {
-        public string Id { get; private set; }
         public string Name { get; private set; }
         public NetworkStream Stream { get; private set; }
         private readonly TcpClient client;
         private readonly Server server;
 
-        public ClientObject(TcpClient client, Server server)
+        public ClientInstance(TcpClient client, Server server)
         {
             this.client = client;
             this.server = server;
-            server.AddClient(this);
-            Id = Guid.NewGuid().ToString();
         }
 
         public void Start()

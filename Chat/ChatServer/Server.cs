@@ -11,13 +11,13 @@ namespace ChatServer
     internal class Server
     {
         private TcpListener listener;
-        private readonly List<ClientObject> clients;
+        private readonly List<ClientInstance> clients;
         private readonly int port;
 
         public Server(int port)
         {
             this.port = port;
-            clients = new List<ClientObject>();
+            clients = new List<ClientInstance>();
         }
 
         public void Start()
@@ -26,12 +26,7 @@ namespace ChatServer
             thread.Start();
         }
 
-        public void AddClient(ClientObject client)
-        {
-            clients.Add(client);
-        }
-
-        public void RemoveClient(ClientObject client)
+        public void RemoveClient(ClientInstance client)
         {
             clients.Remove(client);
         }
@@ -47,8 +42,9 @@ namespace ChatServer
                 while (true)
                 {
                     var tcpClient = listener.AcceptTcpClient();
-                    var clientObject = new ClientObject(tcpClient, this);
-                    clientObject.Start();
+                    var clientInstance = new ClientInstance(tcpClient, this);
+                    clients.Add(clientInstance);
+                    clientInstance.Start();
                 }
             }
             catch (Exception e)
