@@ -39,7 +39,7 @@ namespace ChatClient
             {
                 if (textField.Text != "")
                 {
-                    textField.Text += "\n" + message;
+                    textField.Text += Environment.NewLine + message;
                     return;
                 }
                 textField.Text = message;

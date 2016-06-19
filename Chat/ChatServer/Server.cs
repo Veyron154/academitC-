@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -17,6 +18,12 @@ namespace ChatServer
         {
             this.port = port;
             clients = new List<ClientObject>();
+        }
+
+        public void Start()
+        {
+            var thread = new Thread(Listen);
+            thread.Start();
         }
 
         public void AddClient(ClientObject client)
@@ -64,13 +71,8 @@ namespace ChatServer
 
         public string GetClients()
         {
-            var builder = new StringBuilder();
-            builder.Append("Список участников:\n");
-            foreach (var client in clients)
-            {
-                builder.Append(client.Name + "\n");
-            }
-            return builder.ToString();
+            return "Список участников:" + Environment.NewLine + string.Join(Environment.NewLine, 
+                clients.Select(c => c.Name));
         }
 
         public void Disconnect()

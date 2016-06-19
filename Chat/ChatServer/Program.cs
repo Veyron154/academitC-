@@ -9,8 +9,7 @@ namespace ChatServer
         {
             const int port = 2000;
             var server = new Server(port);
-            var thread = new Thread(server.Listen);
-            thread.Start();
+            server.Start();
         }
     }
 }
