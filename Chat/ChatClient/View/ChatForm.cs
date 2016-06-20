@@ -13,7 +13,6 @@ namespace ChatClient.View
         public ChatForm()
         {
             InitializeComponent();
-            FormBorderStyle = FormBorderStyle.FixedSingle;
         }
 
         private void enterButton_Click(object sender, EventArgs e)
