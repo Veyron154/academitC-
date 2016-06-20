@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Windows.Forms;
 using ChatClient.View;
 
@@ -9,9 +10,11 @@ namespace ChatClient
         [STAThread]
         private static void Main()
         {
+            var port = int.Parse(ConfigurationManager.AppSettings["port"]); 
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ChatForm());
+            Application.Run(new ChatForm(port));
         }
     }
 }

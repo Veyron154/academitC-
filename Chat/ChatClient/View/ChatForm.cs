@@ -8,22 +8,24 @@ namespace ChatClient.View
     {
         private EnterForm _enterForm;
         private IClient _client;
+        private int _port;
+
         private bool Connected { get; set; }
 
-        public ChatForm()
+        public ChatForm(int port)
         {
             InitializeComponent();
-            enterButton.Focus();
+            _port = port;
         }
 
         private void enterButton_Click(object sender, EventArgs e)
         {
             _enterForm = new EnterForm();
-            if (_enterForm.ShowDialog(this) != DialogResult.OK || Connected || _enterForm.Name == "")
+            if (_enterForm.ShowDialog(this) != DialogResult.OK || Connected)
             {
                 return;
             }
-            _client = new Client(_enterForm.Name, this);
+            _client = new Client(_enterForm.Name, this, _port);
             _client.Connect();
             Connected = true;
             sendButton.Enabled = true;
