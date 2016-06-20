@@ -8,7 +8,7 @@ namespace ChatClient.View
     {
         private EnterForm _enterForm;
         private IClient _client;
-        private int _port;
+        private readonly int _port;
 
         private bool Connected { get; set; }
 
