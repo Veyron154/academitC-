@@ -14,11 +14,15 @@ namespace ChatClient.View
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            Name = textName.Text;
-            if (Name != null)
+            if (textName.Text == "")
             {
-                DialogResult = DialogResult.OK;
+                const string message = "Имя должно состоять минимум из одного символа";
+                const string title = "Ошибка";
+                MessageBox.Show(message, title, MessageBoxButtons.OK);
+                return;
             }
+            Name = textName.Text;
+            DialogResult = DialogResult.OK;
             Hide();
         }
     }

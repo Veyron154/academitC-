@@ -54,6 +54,7 @@
             this.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox.Size = new System.Drawing.Size(360, 50);
             this.textBox.TabIndex = 1;
+            this.textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
             // 
             // enterButton
             // 
@@ -109,12 +110,10 @@
             this.Controls.Add(this.enterButton);
             this.Controls.Add(this.textBox);
             this.Controls.Add(this.textField);
-            this.KeyPreview = true;
             this.Name = "ChatForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Чат";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChatForm_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChatForm_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

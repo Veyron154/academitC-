@@ -32,7 +32,7 @@ namespace ChatServer
                 var message = GetMessage();
                 Name = message;
 
-                message = Name + " вошёл в чат.";
+                message = $"({DateTime.Now.ToShortTimeString()}) {Name} вошёл в чат.";
                 server.BroadcastMessage(message);
 
                 while (true)

@@ -57,6 +57,10 @@ namespace ChatClient.View
 
         private void exitButton_Click(object sender, EventArgs e)
         {
+            if (Connected)
+            {
+                WriteMessage($"({DateTime.Now.ToShortTimeString()}) Вы покинули чат.");
+            }
             client.Disconnect();
             sendButton.Enabled = false;
             textBox.Enabled = false;
@@ -76,12 +80,14 @@ namespace ChatClient.View
             client?.Disconnect();
         }
 
-        private void ChatForm_KeyDown(object sender, KeyEventArgs e)
+        private void textBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.Enter)
+            if (e.KeyChar != 10)
             {
-                sendButton_Click(sender, e);
+                return;
             }
+            sendButton_Click(sender, e);
+            e.Handled = true;
         }
     }
 }
