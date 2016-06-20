@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -14,11 +15,13 @@ namespace ChatServer
         private TcpListener listener;
         private readonly List<ClientInstance> clients;
         private readonly int port;
+        private readonly bool logged;
 
         public Server()
         {
-            this.port = int.Parse(ConfigurationManager.AppSettings["port"]);
+            port = int.Parse(ConfigurationManager.AppSettings["port"]);
             clients = new List<ClientInstance>();
+            logged = bool.Parse(ConfigurationManager.AppSettings["logged"]);
         }
 
         public void Start()
@@ -29,6 +32,7 @@ namespace ChatServer
 
         public void RemoveClient(ClientInstance client)
         {
+            WriteInLog($"({DateTime.Now}) {client.Name} покинул чат.");
             clients.Remove(client);
         }
 
@@ -39,6 +43,7 @@ namespace ChatServer
                 listener = new TcpListener(IPAddress.Any, port);
                 listener.Start();
                 Console.WriteLine("Сервер запущен");
+                WriteInLog($"({DateTime.Now}) Сервер запущен.");
 
                 while (true)
                 {
@@ -48,9 +53,8 @@ namespace ChatServer
                     clientInstance.Start();
                 }
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e.Message);
                 Disconnect();
             }
         }
@@ -79,6 +83,17 @@ namespace ChatServer
                 client.Disconnect();
             }
             Environment.Exit(0);
+        }
+
+        public void WriteInLog(string message)
+        {
+            if (!logged)
+            {
+                return;
+            }
+            var sw = new StreamWriter("Log.txt", true);
+            sw.WriteLine(message);
+            sw.Close();
         }
     }
 }

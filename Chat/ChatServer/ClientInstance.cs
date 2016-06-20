@@ -34,6 +34,7 @@ namespace ChatServer
 
                 message = $"({DateTime.Now.ToShortTimeString()}) {Name} вошёл в чат.";
                 server.BroadcastMessage(message);
+                server.WriteInLog($"({DateTime.Now}) {Name} вошёл в чат.");
 
                 while (true)
                 {
@@ -45,13 +46,17 @@ namespace ChatServer
                             SendClients();
                             continue;
                         }
+                        if (message == "")
+                        {
+                            message = $"({DateTime.Now.ToShortTimeString()}) {Name} покинул чат.";
+                            server.BroadcastMessage(message);
+                            continue;
+                        }
                         message = $"({DateTime.Now.ToShortTimeString()}) {Name}: {message}";
                         server.BroadcastMessage(message);
                     }
                     catch
                     {
-                        message = Name + " покинул чат.";
-                        server.BroadcastMessage(message);
                         break;
                     }
                 }

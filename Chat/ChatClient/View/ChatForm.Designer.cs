@@ -47,7 +47,7 @@
             this.textField.Name = "textField";
             this.textField.ReadOnly = true;
             this.tableLayoutPanel1.SetRowSpan(this.textField, 5);
-            this.textField.Size = new System.Drawing.Size(388, 217);
+            this.textField.Size = new System.Drawing.Size(388, 202);
             this.textField.TabIndex = 0;
             this.textField.Text = "";
             // 
@@ -57,11 +57,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox.Enabled = false;
-            this.textBox.Location = new System.Drawing.Point(3, 226);
+            this.textBox.Location = new System.Drawing.Point(3, 211);
             this.textBox.Multiline = true;
             this.textBox.Name = "textBox";
             this.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox.Size = new System.Drawing.Size(388, 32);
+            this.textBox.Size = new System.Drawing.Size(388, 47);
             this.textBox.TabIndex = 1;
             this.textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
             // 
@@ -77,8 +77,9 @@
             // 
             // sendButton
             // 
+            this.sendButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.sendButton.Enabled = false;
-            this.sendButton.Location = new System.Drawing.Point(397, 226);
+            this.sendButton.Location = new System.Drawing.Point(397, 228);
             this.sendButton.Name = "sendButton";
             this.sendButton.Size = new System.Drawing.Size(84, 30);
             this.sendButton.TabIndex = 3;
@@ -100,7 +101,7 @@
             // clientsButton
             // 
             this.clientsButton.Enabled = false;
-            this.clientsButton.Location = new System.Drawing.Point(397, 124);
+            this.clientsButton.Location = new System.Drawing.Point(397, 119);
             this.clientsButton.Name = "clientsButton";
             this.clientsButton.Size = new System.Drawing.Size(84, 35);
             this.clientsButton.TabIndex = 5;
@@ -129,7 +130,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(484, 261);
             this.tableLayoutPanel1.TabIndex = 6;
             // 

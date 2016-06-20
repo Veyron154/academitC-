@@ -13,6 +13,7 @@ namespace ChatClient.View
         public ChatForm()
         {
             InitializeComponent();
+            enterButton.Focus();
         }
 
         private void enterButton_Click(object sender, EventArgs e)
@@ -52,6 +53,7 @@ namespace ChatClient.View
             {
                 textBox.Text = "";
             }));
+            enterButton.Focus();
         }
 
         private void exitButton_Click(object sender, EventArgs e)
