@@ -47,7 +47,7 @@
             this.textField.Name = "textField";
             this.textField.ReadOnly = true;
             this.tableLayoutPanel1.SetRowSpan(this.textField, 5);
-            this.textField.Size = new System.Drawing.Size(423, 205);
+            this.textField.Size = new System.Drawing.Size(388, 205);
             this.textField.TabIndex = 0;
             this.textField.Text = "";
             // 
@@ -61,13 +61,13 @@
             this.textBox.Multiline = true;
             this.textBox.Name = "textBox";
             this.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox.Size = new System.Drawing.Size(423, 44);
+            this.textBox.Size = new System.Drawing.Size(388, 44);
             this.textBox.TabIndex = 1;
             this.textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
             // 
             // enterButton
             // 
-            this.enterButton.Location = new System.Drawing.Point(432, 3);
+            this.enterButton.Location = new System.Drawing.Point(397, 3);
             this.enterButton.Name = "enterButton";
             this.enterButton.Size = new System.Drawing.Size(84, 29);
             this.enterButton.TabIndex = 2;
@@ -79,7 +79,7 @@
             // 
             this.sendButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.sendButton.Enabled = false;
-            this.sendButton.Location = new System.Drawing.Point(432, 228);
+            this.sendButton.Location = new System.Drawing.Point(397, 228);
             this.sendButton.Name = "sendButton";
             this.sendButton.Size = new System.Drawing.Size(84, 30);
             this.sendButton.TabIndex = 3;
@@ -90,7 +90,7 @@
             // exitButton
             // 
             this.exitButton.Enabled = false;
-            this.exitButton.Location = new System.Drawing.Point(432, 38);
+            this.exitButton.Location = new System.Drawing.Point(397, 38);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(84, 29);
             this.exitButton.TabIndex = 4;
@@ -101,7 +101,7 @@
             // clientsButton
             // 
             this.clientsButton.Enabled = false;
-            this.clientsButton.Location = new System.Drawing.Point(432, 120);
+            this.clientsButton.Location = new System.Drawing.Point(397, 120);
             this.clientsButton.Name = "clientsButton";
             this.clientsButton.Size = new System.Drawing.Size(84, 35);
             this.clientsButton.TabIndex = 5;
@@ -131,14 +131,14 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(519, 261);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(484, 261);
             this.tableLayoutPanel1.TabIndex = 6;
             // 
             // ChatForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(519, 261);
+            this.ClientSize = new System.Drawing.Size(484, 261);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(500, 300);
             this.Name = "ChatForm";
