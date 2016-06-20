@@ -8,31 +8,31 @@ namespace ChatClient.Model
 {
     internal class Client : IClient
     {
-        private readonly string name;
-        private readonly string host;
-        private readonly int port;
-        private NetworkStream stream;
-        private readonly TcpClient client;
-        private readonly IChatForm form;
+        private readonly string _name;
+        private readonly string _host;
+        private readonly int _port;
+        private NetworkStream _stream;
+        private readonly TcpClient _client;
+        private readonly IChatForm _form;
 
         public Client(string name, IChatForm form)
         {
-            this.name = name;
-            host = "127.0.0.1";
-            port = 2000;
-            this.form = form;
-            client = new TcpClient();
+            _name = name;
+            _host = "127.0.0.1";
+            _port = 2000;
+            _form = form;
+            _client = new TcpClient();
         }
 
         public void Connect()
         {
             try
             {
-                client.Connect(host, port);
-                stream = client.GetStream();
+                _client.Connect(_host, _port);
+                _stream = _client.GetStream();
 
-                var data = Encoding.Unicode.GetBytes(name);
-                stream.Write(data, 0, data.Length);
+                var data = Encoding.Unicode.GetBytes(_name);
+                _stream.Write(data, 0, data.Length);
 
                 var thread = new Thread(ReceiveMessage);
                 thread.Start();
@@ -44,7 +44,7 @@ namespace ChatClient.Model
             }
         }
 
-        public void ReceiveMessage()
+        private void ReceiveMessage()
         {
             while (true)
             {
@@ -53,11 +53,11 @@ namespace ChatClient.Model
                     var data = new byte[64];
                     var builder = new StringBuilder();
 
-                    while (stream.DataAvailable)
+                    while (_stream.DataAvailable)
                     {
-                        var bytes = stream.Read(data, 0, data.Length);
+                        var bytes = _stream.Read(data, 0, data.Length);
                         builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                        form.WriteMessage(builder.ToString());
+                        _form.WriteMessage(builder.ToString());
                     }
                 }
                 catch
@@ -71,13 +71,13 @@ namespace ChatClient.Model
         public void SendMessage(string message)
         {
             var data = Encoding.Unicode.GetBytes(message);
-            stream.Write(data, 0, data.Length);
+            _stream.Write(data, 0, data.Length);
         }
 
         public void Disconnect()
         {
-            stream?.Close();
-            client?.Close();
+            _stream?.Close();
+            _client?.Close();
         }
     }
 }

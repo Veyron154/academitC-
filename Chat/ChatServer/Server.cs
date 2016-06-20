@@ -1,27 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using Logger;
 
 namespace ChatServer
 {
     internal class Server
     {
-        private TcpListener listener;
-        private readonly List<ClientInstance> clients;
-        private readonly int port;
-        private readonly bool logged;
+        private TcpListener _listener;
+        private readonly List<ClientInstance> _clients;
+        private readonly int _port;
+        private readonly bool _logged;
+        private readonly ILogger _logger;
 
-        public Server()
+        public Server(int port, bool logged)
         {
-            port = int.Parse(ConfigurationManager.AppSettings["port"]);
-            clients = new List<ClientInstance>();
-            logged = bool.Parse(ConfigurationManager.AppSettings["logged"]);
+            _port = port;
+            _clients = new List<ClientInstance>();
+            _logged = logged;
+            if (logged)
+            {
+                _logger = new FileLogger("Log.txt");
+            }
         }
 
         public void Start()
@@ -30,26 +34,21 @@ namespace ChatServer
             thread.Start();
         }
 
-        public void RemoveClient(ClientInstance client)
-        {
-            WriteInLog($"({DateTime.Now}) {client.Name} покинул чат.");
-            clients.Remove(client);
-        }
-
-        public void Listen()
+        private void Listen()
         {
             try
             {
-                listener = new TcpListener(IPAddress.Any, port);
-                listener.Start();
+                _listener = new TcpListener(IPAddress.Any, _port);
+                _listener.Start();
                 Console.WriteLine("Сервер запущен");
-                WriteInLog($"({DateTime.Now}) Сервер запущен.");
+                _logger.Logging($"({DateTime.Now}) Сервер запущен.");
 
                 while (true)
                 {
-                    var tcpClient = listener.AcceptTcpClient();
-                    var clientInstance = new ClientInstance(tcpClient, this);
-                    clients.Add(clientInstance);
+                    var tcpClient = _listener.AcceptTcpClient();
+                    var clientInstance = _logged ? new ClientInstance(tcpClient, this, _logger) : 
+                        new ClientInstance(tcpClient, this);
+                    _clients.Add(clientInstance);
                     clientInstance.Start();
                 }
             }
@@ -63,37 +62,32 @@ namespace ChatServer
         {
             var data = Encoding.Unicode.GetBytes(message);
 
-            foreach (var client in clients)
+            foreach (var client in _clients)
             {
                 client.Stream.Write(data, 0, data.Length);
             }
         }
 
+        public void RemoveClient(ClientInstance client)
+        {
+            _logger.Logging($"({DateTime.Now}) {client.Name} покинул чат.");
+            _clients.Remove(client);
+        }
+
         public string GetClients()
         {
             return "Список участников:" + Environment.NewLine + string.Join(Environment.NewLine, 
-                clients.Select(c => c.Name));
+                _clients.Select(c => c.Name));
         }
 
-        public void Disconnect()
+        private void Disconnect()
         {
-            listener.Stop();
-            foreach (var client in clients)
+            _listener.Stop();
+            foreach (var client in _clients)
             {
                 client.Disconnect();
             }
             Environment.Exit(0);
-        }
-
-        public void WriteInLog(string message)
-        {
-            if (!logged)
-            {
-                return;
-            }
-            var sw = new StreamWriter("Log.txt", true);
-            sw.WriteLine(message);
-            sw.Close();
         }
     }
 }

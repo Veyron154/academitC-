@@ -2,20 +2,30 @@
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using Logger;
 
 namespace ChatServer
 {
     internal class ClientInstance
     {
+        private readonly TcpClient _client;
+        private readonly Server _server;
+        private readonly ILogger _logger;
+
         public string Name { get; private set; }
         public NetworkStream Stream { get; private set; }
-        private readonly TcpClient client;
-        private readonly Server server;
 
         public ClientInstance(TcpClient client, Server server)
         {
-            this.client = client;
-            this.server = server;
+            _client = client;
+            _server = server;
+        }
+
+        public ClientInstance(TcpClient client, Server server, ILogger logger)
+        {
+            _client = client;
+            _server = server;
+            _logger = logger;
         }
 
         public void Start()
@@ -24,17 +34,17 @@ namespace ChatServer
             thread.Start();
         }
 
-        public void Process()
+        private void Process()
         {
             try
             {
-                Stream = client.GetStream();
+                Stream = _client.GetStream();
                 var message = GetMessage();
                 Name = message;
 
                 message = $"({DateTime.Now.ToShortTimeString()}) {Name} вошёл в чат.";
-                server.BroadcastMessage(message);
-                server.WriteInLog($"({DateTime.Now}) {Name} вошёл в чат.");
+                _server.BroadcastMessage(message);
+                _logger.Logging($"({DateTime.Now}) {Name} вошёл в чат.");
 
                 while (true)
                 {
@@ -49,11 +59,11 @@ namespace ChatServer
                         if (message == "")
                         {
                             message = $"({DateTime.Now.ToShortTimeString()}) {Name} покинул чат.";
-                            server.BroadcastMessage(message);
+                            _server.BroadcastMessage(message);
                             continue;
                         }
                         message = $"({DateTime.Now.ToShortTimeString()}) {Name}: {message}";
-                        server.BroadcastMessage(message);
+                        _server.BroadcastMessage(message);
                     }
                     catch
                     {
@@ -67,7 +77,7 @@ namespace ChatServer
             }
             finally
             {
-                server.RemoveClient(this);
+                _server.RemoveClient(this);
                 Disconnect();
             }
         }
@@ -88,14 +98,14 @@ namespace ChatServer
 
         private void SendClients()
         {
-            var data = Encoding.Unicode.GetBytes(server.GetClients());
+            var data = Encoding.Unicode.GetBytes(_server.GetClients());
             Stream.Write(data, 0, data.Length);
         }
 
         public void Disconnect()
         {
             Stream?.Close();
-            client?.Close();
+            _client?.Close();
         }
     }
 }
