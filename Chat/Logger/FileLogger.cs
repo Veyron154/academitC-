@@ -14,9 +14,11 @@ namespace Logger
 
         public void Logging(string data)
         {
-            var sw = new StreamWriter(_pathToFile, true);
-            sw.WriteLine(data);
-            sw.Close();
+            using (var sw = new StreamWriter(_pathToFile, true))
+            {
+                sw.WriteLine(data);
+                sw.Close();
+            }
         }
     }
 }
