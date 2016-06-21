@@ -3,6 +3,6 @@ namespace Logger
 {
     public interface ILogger
     {
-        void Logging(string data);
+        void Log(string data);
     }
 }

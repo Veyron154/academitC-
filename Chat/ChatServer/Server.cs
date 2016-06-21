@@ -26,6 +26,10 @@ namespace ChatServer
             {
                 _logger = new FileLogger("Log.txt");
             }
+            else
+            {
+                _logger = new NullLogger();
+            }
         }
 
         public void Start()
@@ -41,13 +45,12 @@ namespace ChatServer
                 _listener = new TcpListener(IPAddress.Any, _port);
                 _listener.Start();
                 Console.WriteLine("Сервер запущен");
-                _logger.Logging($"({DateTime.Now}) Сервер запущен.");
+                _logger.Log($"({DateTime.Now}) Сервер запущен.");
 
                 while (true)
                 {
                     var tcpClient = _listener.AcceptTcpClient();
-                    var clientInstance = _logged ? new ClientInstance(tcpClient, this, _logger) : 
-                        new ClientInstance(tcpClient, this);
+                    var clientInstance = new ClientInstance(tcpClient, this, _logger);
                     _clients.Add(clientInstance);
                     clientInstance.Start();
                 }
@@ -70,7 +73,7 @@ namespace ChatServer
 
         public void RemoveClient(ClientInstance client)
         {
-            _logger.Logging($"({DateTime.Now}) {client.Name} покинул чат.");
+            _logger.Log($"({DateTime.Now}) {client.Name} покинул чат.");
             _clients.Remove(client);
         }
 

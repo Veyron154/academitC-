@@ -12,7 +12,7 @@ namespace Logger
             _pathToFile = pathToFile;
         }
 
-        public void Logging(string data)
+        public void Log(string data)
         {
             using (var sw = new StreamWriter(_pathToFile, true))
             {

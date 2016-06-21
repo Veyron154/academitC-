@@ -15,12 +15,6 @@ namespace ChatServer
         public string Name { get; private set; }
         public NetworkStream Stream { get; private set; }
 
-        public ClientInstance(TcpClient client, Server server)
-        {
-            _client = client;
-            _server = server;
-        }
-
         public ClientInstance(TcpClient client, Server server, ILogger logger)
         {
             _client = client;
@@ -44,7 +38,7 @@ namespace ChatServer
 
                 message = $"({DateTime.Now.ToShortTimeString()}) {Name} вошёл в чат.";
                 _server.BroadcastMessage(message);
-                _logger.Logging($"({DateTime.Now}) {Name} вошёл в чат.");
+                _logger.Log($"({DateTime.Now}) {Name} вошёл в чат.");
 
                 while (true)
                 {
