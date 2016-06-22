@@ -13,6 +13,7 @@ namespace ChatServer
         private readonly Server _server;
         private readonly ILogger _logger;
         private NetworkStream _stream;
+        private readonly BinaryFormatter _formatter;
 
         public string Name { get; private set; }
         public string Id { get; }
@@ -22,6 +23,7 @@ namespace ChatServer
             _client = client;
             _server = server;
             _logger = logger;
+            _formatter = new BinaryFormatter();
             Id = Guid.NewGuid().ToString();
         }
 
@@ -79,22 +81,14 @@ namespace ChatServer
 
         private string GetMessage()
         {
-            var formatter = new BinaryFormatter();
-            string message;
-
-            do
-            {
-                var chatMessage = (ChatMessage) formatter.Deserialize(_stream);
-                message = chatMessage.Data;
-            } while (_stream.DataAvailable);
-
+            var chatMessage = (ChatMessage) _formatter.Deserialize(_stream);
+            var message = chatMessage.Data;
             return message;
         }
 
         public void SendMessage(string message)
         {
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(_stream, new ChatMessage(message));
+            _formatter.Serialize(_stream, new ChatMessage(message));
         }
 
         public void Disconnect()

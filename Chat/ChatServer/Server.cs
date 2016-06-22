@@ -15,18 +15,11 @@ namespace ChatServer
         private readonly int _port;
         private readonly ILogger _logger;
 
-        public Server(int port, bool logged)
+        public Server(int port, ILogger loggeer)
         {
             _port = port;
             _clients = new List<ClientInstance>();
-            if (logged)
-            {
-                _logger = new FileLogger("Log.txt");
-            }
-            else
-            {
-                _logger = new NullObjectLogger();
-            }
+            _logger = loggeer;
         }
 
         public void Start()

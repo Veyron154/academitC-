@@ -15,6 +15,7 @@ namespace ChatClient.Model
         private NetworkStream _stream;
         private readonly TcpClient _client;
         private readonly IChatForm _form;
+        private readonly BinaryFormatter _formatter;
 
         public Client(string name, IChatForm form, int port, string host)
         {
@@ -22,6 +23,7 @@ namespace ChatClient.Model
             _host = host;
             _port = port;
             _form = form;
+            _formatter = new BinaryFormatter();
             _client = new TcpClient();
         }
 
@@ -50,13 +52,8 @@ namespace ChatClient.Model
             {
                 try
                 {
-                    var formatter = new BinaryFormatter();
-
-                    while (_stream.DataAvailable)
-                    {
-                        var message = (ChatMessage) formatter.Deserialize(_stream);
-                        _form.WriteMessage(message.Data);
-                    }
+                   var message = (ChatMessage) _formatter.Deserialize(_stream);
+                    _form.WriteMessage(message.Data);
                 }
                 catch
                 {
@@ -69,8 +66,7 @@ namespace ChatClient.Model
         public void SendMessage(string message)
         {
             var data = new ChatMessage(message);
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(_stream, data);
+            _formatter.Serialize(_stream, data);
         }
 
         public void Disconnect()

@@ -1,6 +1,7 @@
 ﻿
 
 using System.Configuration;
+using Logger;
 
 namespace ChatServer
 {
@@ -10,8 +11,18 @@ namespace ChatServer
         {
             var port = int.Parse(ConfigurationManager.AppSettings["port"]);
             var logged = bool.Parse(ConfigurationManager.AppSettings["logged"]);
+            ILogger logger;
 
-            var server = new Server(port, logged);
+            if (logged)
+            {
+                logger = new FileLogger("log.txt");
+            }
+            else
+            {
+                logger = new NullObjectLogger();
+            }
+
+            var server = new Server(port, logger);
             server.Start();
         }
     }
