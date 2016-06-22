@@ -10,11 +10,12 @@ namespace ChatClient
         [STAThread]
         private static void Main()
         {
-            var port = int.Parse(ConfigurationManager.AppSettings["port"]); 
+            var port = int.Parse(ConfigurationManager.AppSettings["port"]);
+            var host = ConfigurationManager.AppSettings["host"];
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ChatForm(port));
+            Application.Run(new ChatForm(port, host));
         }
     }
 }

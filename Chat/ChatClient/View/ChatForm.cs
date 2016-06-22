@@ -9,13 +9,15 @@ namespace ChatClient.View
         private EnterForm _enterForm;
         private IClient _client;
         private readonly int _port;
+        private readonly string _host;
 
         private bool Connected { get; set; }
 
-        public ChatForm(int port)
+        public ChatForm(int port, string host)
         {
             InitializeComponent();
             _port = port;
+            _host = host;
         }
 
         private void enterButton_Click(object sender, EventArgs e)
@@ -25,7 +27,7 @@ namespace ChatClient.View
             {
                 return;
             }
-            _client = new Client(_enterForm.Name, this, _port);
+            _client = new Client(_enterForm.Name, this, _port, _host);
             _client.Connect();
             Connected = true;
             sendButton.Enabled = true;

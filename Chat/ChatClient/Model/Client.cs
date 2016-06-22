@@ -16,10 +16,10 @@ namespace ChatClient.Model
         private readonly TcpClient _client;
         private readonly IChatForm _form;
 
-        public Client(string name, IChatForm form, int port)
+        public Client(string name, IChatForm form, int port, string host)
         {
             _name = name;
-            _host = "127.0.0.1";
+            _host = host;
             _port = port;
             _form = form;
             _client = new TcpClient();

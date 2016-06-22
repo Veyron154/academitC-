@@ -25,7 +25,7 @@ namespace ChatServer
             }
             else
             {
-                _logger = new NullLogger();
+                _logger = new NullObjectLogger();
             }
         }
 
