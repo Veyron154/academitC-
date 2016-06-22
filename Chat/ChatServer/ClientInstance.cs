@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net.Sockets;
-using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using Logger;
+using Message;
 
 namespace ChatServer
 {
@@ -11,15 +12,17 @@ namespace ChatServer
         private readonly TcpClient _client;
         private readonly Server _server;
         private readonly ILogger _logger;
+        private NetworkStream _stream;
 
         public string Name { get; private set; }
-        public NetworkStream Stream { get; private set; }
-
+        public string Id { get; }
+        
         public ClientInstance(TcpClient client, Server server, ILogger logger)
         {
             _client = client;
             _server = server;
             _logger = logger;
+            Id = Guid.NewGuid().ToString();
         }
 
         public void Start()
@@ -32,12 +35,13 @@ namespace ChatServer
         {
             try
             {
-                Stream = _client.GetStream();
+                _stream = _client.GetStream();
                 var message = GetMessage();
                 Name = message;
 
                 message = $"({DateTime.Now.ToShortTimeString()}) {Name} вошёл в чат.";
-                _server.BroadcastMessage(message);
+                _server.BroadcastMessage(message, Id);
+                SendMessage("Вы вошли в чат.");
                 _logger.Log($"({DateTime.Now}) {Name} вошёл в чат.");
 
                 while (true)
@@ -47,20 +51,17 @@ namespace ChatServer
                         message = GetMessage();
                         if (message == "GET_CLIENTS")
                         {
-                            SendClients();
-                            continue;
-                        }
-                        if (message == "")
-                        {
-                            message = $"({DateTime.Now.ToShortTimeString()}) {Name} покинул чат.";
-                            _server.BroadcastMessage(message);
+                            SendMessage(_server.GetClients());
                             continue;
                         }
                         message = $"({DateTime.Now.ToShortTimeString()}) {Name}: {message}";
-                        _server.BroadcastMessage(message);
+                        _server.BroadcastMessage(message, Id);
+                        SendMessage(message);
                     }
                     catch
                     {
+                        message = $"({DateTime.Now.ToShortTimeString()}) {Name} покинул чат.";
+                        _server.BroadcastMessage(message, Id);
                         break;
                     }
                 }
@@ -78,27 +79,27 @@ namespace ChatServer
 
         private string GetMessage()
         {
-            var message = new byte[128];
-            var builder = new StringBuilder();
+            var formatter = new BinaryFormatter();
+            string message;
 
             do
             {
-                var bytes = Stream.Read(message, 0, message.Length);
-                builder.Append(Encoding.Unicode.GetString(message, 0, bytes));
-            } while (Stream.DataAvailable);
+                var chatMessage = (ChatMessage) formatter.Deserialize(_stream);
+                message = chatMessage.Data;
+            } while (_stream.DataAvailable);
 
-            return builder.ToString();
+            return message;
         }
 
-        private void SendClients()
+        public void SendMessage(string message)
         {
-            var data = Encoding.Unicode.GetBytes(_server.GetClients());
-            Stream.Write(data, 0, data.Length);
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(_stream, new ChatMessage(message));
         }
 
         public void Disconnect()
         {
-            Stream?.Close();
+            _stream?.Close();
             _client?.Close();
         }
     }

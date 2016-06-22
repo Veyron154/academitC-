@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net.Sockets;
-using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using ChatClient.View;
+using Message;
 
 namespace ChatClient.Model
 {
@@ -31,8 +32,7 @@ namespace ChatClient.Model
                 _client.Connect(_host, _port);
                 _stream = _client.GetStream();
 
-                var data = Encoding.Unicode.GetBytes(_name);
-                _stream.Write(data, 0, data.Length);
+                SendMessage(_name);
 
                 var thread = new Thread(ReceiveMessage);
                 thread.Start();
@@ -50,14 +50,12 @@ namespace ChatClient.Model
             {
                 try
                 {
-                    var data = new byte[64];
-                    var builder = new StringBuilder();
+                    var formatter = new BinaryFormatter();
 
                     while (_stream.DataAvailable)
                     {
-                        var bytes = _stream.Read(data, 0, data.Length);
-                        builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                        _form.WriteMessage(builder.ToString());
+                        var message = (ChatMessage) formatter.Deserialize(_stream);
+                        _form.WriteMessage(message.Data);
                     }
                 }
                 catch
@@ -70,8 +68,9 @@ namespace ChatClient.Model
 
         public void SendMessage(string message)
         {
-            var data = Encoding.Unicode.GetBytes(message);
-            _stream.Write(data, 0, data.Length);
+            var data = new ChatMessage(message);
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(_stream, data);
         }
 
         public void Disconnect()

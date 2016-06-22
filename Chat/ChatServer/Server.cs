@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using Logger;
 
@@ -14,14 +13,12 @@ namespace ChatServer
         private TcpListener _listener;
         private readonly List<ClientInstance> _clients;
         private readonly int _port;
-        private readonly bool _logged;
         private readonly ILogger _logger;
 
         public Server(int port, bool logged)
         {
             _port = port;
             _clients = new List<ClientInstance>();
-            _logged = logged;
             if (logged)
             {
                 _logger = new FileLogger("Log.txt");
@@ -61,13 +58,14 @@ namespace ChatServer
             }
         }
 
-        public void BroadcastMessage(string message)
+        public void BroadcastMessage(string message, string id)
         {
-            var data = Encoding.Unicode.GetBytes(message);
-
             foreach (var client in _clients)
             {
-                client.Stream.Write(data, 0, data.Length);
+                if (!client.Id.Equals(id))
+                {
+                    client.SendMessage(message);
+                }
             }
         }
 

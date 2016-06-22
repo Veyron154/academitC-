@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatClient", "ChatClient\Ch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{9E84959B-A818-48E6-9D0D-A5540CC3463F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message", "Message\Message.csproj", "{5F72B512-3893-41AA-B6F6-68C64C9A26CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{9E84959B-A818-48E6-9D0D-A5540CC3463F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E84959B-A818-48E6-9D0D-A5540CC3463F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E84959B-A818-48E6-9D0D-A5540CC3463F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F72B512-3893-41AA-B6F6-68C64C9A26CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F72B512-3893-41AA-B6F6-68C64C9A26CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F72B512-3893-41AA-B6F6-68C64C9A26CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F72B512-3893-41AA-B6F6-68C64C9A26CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
