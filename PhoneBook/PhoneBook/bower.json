@@ -1,0 +1,25 @@
+{
+  "name": "PhoneBook",
+  "homepage": "https://github.com/Veyron154/academitCS",
+  "authors": [
+    "Veyron154 <De1ete54@mail.ru>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "jquery-confirm": "2.5.1",
+    "underscore": "^1.8.3",
+    "knockout": "^3.4.0",
+    "jquery-confirm2": "craftpip/jquery-confirm#^2.5.1"
+  }
+}
