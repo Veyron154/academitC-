@@ -23,14 +23,14 @@ namespace PhoneBook
             {
                 connection.Open();
                
-                var context = new DbContext(connection, false);
+                /*var context = new DbContext(connection, false);
                 context.Contact.Add(new Contact
                 {
                     Surname = "Ivanov",
                     Name = "Ivan",
                     Phone = "3456"
                 });
-                context.SaveChanges();
+                context.SaveChanges();*/
             }
         }
     }

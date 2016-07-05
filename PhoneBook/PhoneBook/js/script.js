@@ -51,6 +51,17 @@ function PhoneBookViewModel() {
         var addedItem = new TableItemsViewModel(self.name(), self.surname(), self.phone());
         self.tableItems.push(addedItem);
 
+        $.ajax({
+            url: "/PhoneBookService.svc/AddContact",
+            data: JSON.stringify(),
+            dataType: "json",
+            method: "POST",
+            processData: false,
+            contentType: "application/json"
+        }).done(function () {
+            alert("ko");
+        });
+
         if (isFiltered) {
             self.executeFilter();
         } else {

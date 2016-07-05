@@ -2,13 +2,13 @@
     var request = { text: "Некоторый текст" };
 
     $.ajax({
-        url: "/PhoneBookService.svc/Echo",
-        data: JSON.stringify(request),
+        url: "/PhoneBookService.svc/AddContact",
+        data: JSON.stringify(),
         dataType: "json",
         method: "POST",
         processData: false,
         contentType: "application/json"
-    }).done(function(response) {
-        alert("Результат ajax: " + response);
+    }).done(function() {
+        alert("Результат ajax: ");
     });
 });
