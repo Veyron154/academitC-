@@ -1,6 +1,7 @@
 $(document).ready(function () {
     var vm = new PhoneBookViewModel();
     ko.applyBindings(vm);
+    vm.fillTable();
 });
 
 function PhoneBookViewModel() {
@@ -19,6 +20,26 @@ function PhoneBookViewModel() {
             item.isChecked(newValue);
         });
     });
+
+    self.fillTable = function () {
+        $.ajax({
+                url: "/PhoneBookService.svc/GetContacts",
+                data: {},
+                dataType: "json",
+                method: "POST",
+                processData: false,
+                contentType: "application/json"
+            })
+            .done(function (contacts) {
+                _.each(contacts, function(contact) {
+                    var addedItem = new TableItemsViewModel(contact.name, contact.surname, contact.phone);
+                    self.tableItems.push(addedItem);
+                    self.visibleTableItems(self.tableItems());
+                });
+                
+                
+        });
+}
 
     var isFiltered = false;
 
@@ -51,15 +72,24 @@ function PhoneBookViewModel() {
         var addedItem = new TableItemsViewModel(self.name(), self.surname(), self.phone());
         self.tableItems.push(addedItem);
 
+        var request = {
+            contact: {
+                name: "Петр",
+                surname: "Петров",
+                phone: "86759"
+            }
+        };
+
         $.ajax({
-            url: "/PhoneBookService.svc/AddContact",
-            data: JSON.stringify(),
-            dataType: "json",
-            method: "POST",
-            processData: false,
-            contentType: "application/json"
-        }).done(function () {
-            alert("ko");
+                url: "/PhoneBookService.svc/AddContact",
+                data: JSON.stringify(request),
+                dataType: "json",
+                method: "POST",
+                processData: false,
+                contentType: "application/json"
+            })
+            .done(function() {
+                alert("Создан контакт");
         });
 
         if (isFiltered) {
@@ -122,6 +152,8 @@ function TableItemsViewModel(name, surname, phone) {
 
     self.isChecked = ko.observable(false);
 }
+
+
 
 
 

@@ -1,9 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="PhoneBook._Default" %>
 
-<asp:Content ContentPlaceHolderID="ScriptsContent" runat="server">
-    <script src="/js/default.js"></script>
-</asp:Content>
-
 <asp:Content ContentPlaceHolderID="MainContent" runat="server">
     <div class="main container">
         <div class="form-inline">

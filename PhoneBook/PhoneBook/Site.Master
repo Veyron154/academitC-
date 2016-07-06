@@ -25,6 +25,5 @@
     </div>
     <asp:ContentPlaceHolder runat="server" ID="MainContent">
     </asp:ContentPlaceHolder>
-    <asp:ContentPlaceHolder runat="server" ID="ScriptsContent"></asp:ContentPlaceHolder>
 </body>
 </html>

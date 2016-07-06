@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[Contact] (
-    [Id]      INT          IDENTITY (1, 1) NOT NULL,
-    [Surname] VARCHAR (50) NOT NULL,
-    [Name]    VARCHAR (50) NOT NULL,
-    [Phone]   VARCHAR (50) NOT NULL,
+    [Id]      INT           IDENTITY (1, 1) NOT NULL,
+    [Surname] NVARCHAR (50) NOT NULL,
+    [Name]    NVARCHAR (50) NOT NULL,
+    [Phone]   NVARCHAR (50) NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

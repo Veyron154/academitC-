@@ -1,36 +1,38 @@
-﻿using System;
-using System.Data.Entity;
-using System.Data.SqlClient;
-using System.Runtime.CompilerServices;
-using DocumentFormat.OpenXml.ExtendedProperties;
+﻿
+using System.Collections.Generic;
+using System.Linq;
+using PhoneBook.DataAccess;
+
 
 namespace PhoneBook
 {
     public class PhoneBookService : IPhoneBookService
     {
-        public string Echo(string text)
+        public void AddContact(ContactDto contact)
         {
-            return text;
+            using (var database = new PhoneBookDatabaseEntities())
+            {
+                database.Contact.Add(new Contact
+                {
+                    Name = contact.Name,
+                    Surname = contact.Surname,
+                    Phone = contact.Phone
+                });
+                database.SaveChanges();
+            }
         }
 
-        public void AddContact()
+        public List<ContactDto> GetContacts()
         {
-            using (
-                var connection =
-                    new SqlConnection(
-                        @"Server=(LocalDB)\MSSQLLocalDB; Integrated Security=true; AttachDbFileName=C:\Users\Veyron\Documents\GitHubVisualStudio\academitCS\PhoneBook\PhoneBook\App_Data\PhoneBookDatabase.mdf")
-                )
+            using (var database = new PhoneBookDatabaseEntities())
             {
-                connection.Open();
-               
-                /*var context = new DbContext(connection, false);
-                context.Contact.Add(new Contact
+                return database.Contact.Select(c => new ContactDto
                 {
-                    Surname = "Ivanov",
-                    Name = "Ivan",
-                    Phone = "3456"
-                });
-                context.SaveChanges();*/
+                    Id = c.Id,
+                    Name = c.Name,
+                    Surname = c.Surname,
+                    Phone = c.Phone
+                }).ToList();
             }
         }
     }

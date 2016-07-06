@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System.Collections.Generic;
+using System.ServiceModel;
 using System.ServiceModel.Web;
 
 namespace PhoneBook
@@ -9,6 +10,11 @@ namespace PhoneBook
         [OperationContract]
         [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.WrappedRequest, 
                    RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
-        string Echo(string text);
+        void AddContact (ContactDto contact);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+            RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        List<ContactDto> GetContacts();
     }
 }
