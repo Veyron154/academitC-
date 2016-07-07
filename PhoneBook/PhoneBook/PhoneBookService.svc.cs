@@ -25,17 +25,18 @@ namespace PhoneBook
             }
         }
 
-        public List<ContactDto> GetContacts()
+        public List<ContactDto> GetContacts(FilterDbo filterDbo)
         {
             using (var database = new PhoneBookDatabaseEntities())
             {
+                var filter = filterDbo.Filter;
                 return database.Contact.Select(c => new ContactDto
                 {
                     Id = c.Id,
                     Name = c.Name,
                     Surname = c.Surname,
                     Phone = c.Phone
-                }).ToList();
+                }).Where(c => c.Surname.Contains(filter) || c.Name.Contains(filter) || c.Phone.Contains(filter)).ToList();
             }
         }
 

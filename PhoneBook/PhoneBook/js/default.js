@@ -9,7 +9,6 @@
     function PhoneBookViewModel() {
         var self = this;
         self.tableItems = ko.observableArray([]);
-        self.visibleTableItems = ko.observableArray([]);
         self.name = ko.observable("");
         self.surname = ko.observable("");
         self.phone = ko.observable("");
@@ -28,12 +27,11 @@
         });
 
         self.fillTable = function() {
-            ajaxPostRequest("/PhoneBookService.svc/GetContacts", {}).done(function (contacts) {
+            ajaxPostRequest("/PhoneBookService.svc/GetContacts", { filter: {filter: self.filterText()}}).done(function (contacts) {
                 _.each(contacts,
                     function (contact) {
                         var addedItem = new TableItemViewModel(contact.name, contact.surname, contact.phone);
                         self.tableItems.push(addedItem);
-                        self.visibleTableItems(self.tableItems());
                     });
             });
         }
@@ -81,8 +79,6 @@
 
             if (isFiltered) {
                 self.executeFilter();
-            } else {
-                self.visibleTableItems(self.tableItems());
             }
 
             self.name("");
@@ -92,7 +88,7 @@
         };
 
         self.removeTableItem = function(item) {
-            var rows = _.filter(self.visibleTableItems(),
+            var rows = _.filter(self.tableItems(),
                 function(item) {
                     return item.isChecked() === true;
                 });
@@ -114,26 +110,20 @@
                         function(c) {
                             ajaxPostRequest("/PhoneBookService.svc/RemoveContact",{ contact: { phone: c.itemPhone }});
                         });
-
-                    self.visibleTableItems(self.tableItems());
                 }
             });
         };
 
         self.executeFilter = function() {
-            var filter = self.filterText().toLowerCase();
-            self.visibleTableItems(_.filter(self.tableItems(),
-                function(item) {
-                    return (item.itemSurname.toLowerCase().indexOf(filter) !== -1 ||
-                        item.itemName.toLowerCase().indexOf(filter) !== -1 ||
-                        item.itemPhone.toLowerCase().indexOf(filter) !== -1);
-                }));
+            self.tableItems.removeAll();
+            self.fillTable();
             isFiltered = true;
         };
 
-        self.cancelFilter = function() {
-            self.visibleTableItems(self.tableItems());
+        self.cancelFilter = function () {
             self.filterText("");
+            self.tableItems.removeAll();
+            self.fillTable();
             isFiltered = false;
         }
     }

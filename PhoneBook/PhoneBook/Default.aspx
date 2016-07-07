@@ -25,7 +25,7 @@
                     <th class="sixth-column">Удалить</th>
                 </tr>
                 </thead>
-                <tbody data-bind="foreach: visibleTableItems">
+                <tbody data-bind="foreach: tableItems">
                 <tr>
                     <td class="first-column"><input type="checkbox" title="Выделить"
                                                     data-bind="checked: isChecked"/></td>
