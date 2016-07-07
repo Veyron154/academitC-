@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="PhoneBook._Default" %>
+﻿<%@ Page Title="Телефонная книга" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="PhoneBook._Default" %>
 
 <asp:Content ContentPlaceHolderID="MainContent" runat="server">
     <div class="main container">
@@ -10,9 +10,7 @@
             </div>
             <button class="btn btn-default button-filter-ok" data-bind="click: executeFilter">Применить</button>
             <button class="btn btn-default button-filter-clear" data-bind="click: cancelFilter">Очистить</button>
-            <form  class="button-excel" data-bind="attr: { action: url }" target="_blank">
-                <button class="btn btn-default">Excel</button>
-            </form>
+            <a class="button-excel btn btn-default" data-bind="attr: { href: url }" target="_blank">Excel</a>
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-condensed table-phone-book">

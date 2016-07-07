@@ -94,7 +94,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="js\default.js" />
-    <Content Include="js\script.js" />
     <Content Include="PhoneBookService.svc" />
     <Content Include="Site.Master" />
     <Content Include="Web.config" />
