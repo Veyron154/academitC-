@@ -14,6 +14,7 @@ function PhoneBookViewModel() {
     self.isTopChecked = ko.observable(false);
     self.filterText = ko.observable("");
     self.needValidate = ko.observable(false);
+    self.url = ko.observable("/PhoneBookService.svc/Excel?filter=1");
 
     self.isTopChecked.subscribe(function (newValue) {
         _.each(self.tableItems(), function (item) {
@@ -23,23 +24,21 @@ function PhoneBookViewModel() {
 
     self.fillTable = function () {
         $.ajax({
-                url: "/PhoneBookService.svc/GetContacts",
-                data: {},
-                dataType: "json",
-                method: "POST",
-                processData: false,
-                contentType: "application/json"
-            })
-            .done(function (contacts) {
-                _.each(contacts, function(contact) {
-                    var addedItem = new TableItemsViewModel(contact.name, contact.surname, contact.phone);
-                    self.tableItems.push(addedItem);
-                    self.visibleTableItems(self.tableItems());
-                });
-                
-                
+            url: "/PhoneBookService.svc/GetContacts",
+            data: {},
+            dataType: "json",
+            method: "POST",
+            processData: false,
+            contentType: "application/json"
+        })
+        .done(function (contacts) {
+            _.each(contacts, function(contact) {
+                var addedItem = new TableItemsViewModel(contact.name, contact.surname, contact.phone);
+                self.tableItems.push(addedItem);
+                self.visibleTableItems(self.tableItems());
+            });
         });
-}
+    }   
 
     var isFiltered = false;
 
@@ -72,25 +71,19 @@ function PhoneBookViewModel() {
         var addedItem = new TableItemsViewModel(self.name(), self.surname(), self.phone());
         self.tableItems.push(addedItem);
 
-        var request = {
-            contact: {
-                name: "Петр",
-                surname: "Петров",
-                phone: "86759"
-            }
-        };
 
         $.ajax({
                 url: "/PhoneBookService.svc/AddContact",
-                data: JSON.stringify(request),
+                data: JSON.stringify({contact: {
+                    name: self.name(),
+                    surname: self.surname(),
+                    phone: self.phone()
+                }}),
                 dataType: "json",
                 method: "POST",
                 processData: false,
                 contentType: "application/json"
-            })
-            .done(function() {
-                alert("Создан контакт");
-        });
+            });
 
         if (isFiltered) {
             self.executeFilter();
@@ -121,6 +114,23 @@ function PhoneBookViewModel() {
             cancelButton: "Отмена",
             confirm: function () {
                 self.tableItems.removeAll(rows);
+
+                _.each(rows,
+                    function(c) {
+                        $.ajax({
+                            url: "/PhoneBookService.svc/RemoveContact",
+                            data: JSON.stringify({
+                                contact: {
+                                    phone: c.itemPhone
+                                }
+                            }),
+                            dataType: "json",
+                            method: "POST",
+                            processData: false,
+                            contentType: "application/json"
+                        });
+                    });
+
                 self.visibleTableItems(self.tableItems());
             }
         });
@@ -152,6 +162,7 @@ function TableItemsViewModel(name, surname, phone) {
 
     self.isChecked = ko.observable(false);
 }
+
 
 
 

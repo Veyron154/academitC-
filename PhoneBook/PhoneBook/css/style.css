@@ -8,6 +8,10 @@ h1 {
     margin: 0 0 25px;
 }
 
+.button-excel {
+    float: right;
+}
+
 /* table */
 .first-column {
     text-align: center;

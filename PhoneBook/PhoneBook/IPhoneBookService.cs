@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
@@ -16,5 +17,16 @@ namespace PhoneBook
         [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.WrappedRequest,
             RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         List<ContactDto> GetContacts();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+                   RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        void RemoveContact(ContactDto contact);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+                   RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, 
+                    UriTemplate = "/Excel?filter={filter}")]
+        Stream GetExcel(string filter);
     }
 }

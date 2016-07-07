@@ -10,6 +10,9 @@
             </div>
             <button class="btn btn-default button-filter-ok" data-bind="click: executeFilter">Применить</button>
             <button class="btn btn-default button-filter-clear" data-bind="click: cancelFilter">Очистить</button>
+            <form  class="button-excel" data-bind="attr: { action: url }" target="_blank">
+                <button class="btn btn-default">Excel</button>
+            </form>
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-condensed table-phone-book">
