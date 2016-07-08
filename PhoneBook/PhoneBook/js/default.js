@@ -3,7 +3,7 @@
         .ready(function() {
             var vm = new PhoneBookViewModel();
             ko.applyBindings(vm);
-            vm.fillTable();
+            vm.refreshTable();
         });
 
     function PhoneBookViewModel() {
@@ -26,11 +26,12 @@
                 });
         });
 
-        self.fillTable = function() {
-            ajaxPostRequest("/PhoneBookService.svc/GetContacts", { filter: {filter: self.filterText()}}).done(function (contacts) {
+        self.refreshTable = function () {
+            self.tableItems.removeAll();
+            ajaxPostRequest("/PhoneBookService.svc/GetContacts", {filter: self.filterText()}).done(function (contacts) {
                 _.each(contacts,
                     function (contact) {
-                        var addedItem = new TableItemViewModel(contact.name, contact.surname, contact.phone);
+                        var addedItem = new TableItemViewModel(contact.name, contact.surname, contact.phone, contact.id);
                         self.tableItems.push(addedItem);
                     });
             });
@@ -65,9 +66,6 @@
                 return;
             }
 
-            var addedItem = new TableItemViewModel(self.name(), self.surname(), self.phone());
-            self.tableItems.push(addedItem);
-
             ajaxPostRequest("/PhoneBookService.svc/AddContact",
                 {
                     contact: {
@@ -75,7 +73,7 @@
                         surname: self.surname(),
                         phone: self.phone()
                     }
-                });
+                }).always(function () { self.refreshTable(); });
 
             if (isFiltered) {
                 self.executeFilter();
@@ -103,34 +101,29 @@
                 content: "Вы действительно хотите удалить " + messageString,
                 confirmButton: "OK",
                 cancelButton: "Отмена",
-                confirm: function() {
-                    self.tableItems.removeAll(rows);
-
-                    _.each(rows,
-                        function(c) {
-                            ajaxPostRequest("/PhoneBookService.svc/RemoveContact",{ contact: { phone: c.itemPhone }});
-                        });
+                confirm: function () {
+                    var array = _.map(rows, function(r) { return r.itemId });
+                    ajaxPostRequest("/PhoneBookService.svc/RemoveContact", { ids: array}).always(function() { self.refreshTable() });
                 }
             });
         };
 
         self.executeFilter = function() {
-            self.tableItems.removeAll();
-            self.fillTable();
+            self.refreshTable();
             isFiltered = true;
         };
 
         self.cancelFilter = function () {
             self.filterText("");
-            self.tableItems.removeAll();
-            self.fillTable();
+            self.refreshTable();
             isFiltered = false;
         }
     }
 
-    function TableItemViewModel(name, surname, phone) {
+    function TableItemViewModel(name, surname, phone, id) {
         var self = this;
 
+        self.itemId = id;
         self.itemName = name;
         self.itemSurname = surname;
         self.itemPhone = phone;

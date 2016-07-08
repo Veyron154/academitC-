@@ -16,12 +16,12 @@ namespace PhoneBook
         [OperationContract]
         [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.WrappedRequest,
             RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
-        List<ContactDto> GetContacts(FilterDbo filter);
+        List<ContactDto> GetContacts(string filter);
 
         [OperationContract]
         [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.WrappedRequest,
                    RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
-        void RemoveContact(ContactDto contact);
+        void RemoveContact(int[] ids);
 
         [OperationContract]
         [WebInvoke(Method = "GET", BodyStyle = WebMessageBodyStyle.WrappedRequest,

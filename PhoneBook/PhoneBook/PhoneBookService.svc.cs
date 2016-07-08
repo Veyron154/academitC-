@@ -25,11 +25,10 @@ namespace PhoneBook
             }
         }
 
-        public List<ContactDto> GetContacts(FilterDbo filterDbo)
+        public List<ContactDto> GetContacts(string filter)
         {
             using (var database = new PhoneBookDatabaseEntities())
             {
-                var filter = filterDbo.Filter;
                 return database.Contact.Select(c => new ContactDto
                 {
                     Id = c.Id,
@@ -40,11 +39,11 @@ namespace PhoneBook
             }
         }
 
-        public void RemoveContact(ContactDto contact)
+        public void RemoveContact(int[] ids)
         {
             using (var database = new PhoneBookDatabaseEntities())
             {
-                database.Contact.Remove(database.Contact.FirstOrDefault(c => c.Phone == contact.Phone));
+                database.Contact.RemoveRange(database.Contact.Where(c => ids.Contains(c.Id)));
                 database.SaveChanges();
             }
         }
