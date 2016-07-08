@@ -39,7 +39,7 @@ namespace PhoneBook
             }
         }
 
-        public void RemoveContact(int[] ids)
+        public void RemoveContacts(int[] ids)
         {
             using (var database = new PhoneBookDatabaseEntities())
             {

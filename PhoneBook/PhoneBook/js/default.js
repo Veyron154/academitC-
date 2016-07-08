@@ -103,7 +103,7 @@
                 cancelButton: "Отмена",
                 confirm: function () {
                     var array = _.map(rows, function(r) { return r.itemId });
-                    ajaxPostRequest("/PhoneBookService.svc/RemoveContact", { ids: array}).always(function() { self.refreshTable() });
+                    ajaxPostRequest("/PhoneBookService.svc/RemoveContacts", { ids: array}).always(function() { self.refreshTable() });
                 }
             });
         };
