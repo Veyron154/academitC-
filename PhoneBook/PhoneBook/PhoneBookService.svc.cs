@@ -59,6 +59,7 @@ namespace PhoneBook
                     Surname = c.Surname,
                     Phone = c.Phone
                 }).Where(c => c.Surname.Contains(filter) || c.Name.Contains(filter) || c.Phone.Contains(filter)).ToList();
+
                 using (var workbook = new XLWorkbook())
                 {
                     var worksheet = workbook.Worksheets.Add("Контакты");
@@ -88,7 +89,7 @@ namespace PhoneBook
                     HttpContext.Current.Response.Headers["Content-Disposition"] = "attachment; filename=contacts.xlsx";
                     HttpContext.Current.Response.ContentType = "application/octet-stream";
                     memoryStream.Position = 0;
-                return memoryStream;
+                    return memoryStream;
                 }
             }
         }
