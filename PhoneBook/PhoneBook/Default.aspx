@@ -19,9 +19,12 @@
                     <th class="first-column"><input class="top-checkbox" type="checkbox"
                                                     data-bind="checked: isTopChecked" title="Выделить все"/></th>
                     <th class="second-column">№</th>
-                    <th class="third-column">Фамилия</th>
-                    <th class="fourth-column">Имя</th>
-                    <th class="fifth-column">Номер телефона</th>
+                    <th class="third-column cursor-pointer" data-bind="click: sortTable('surname')" 
+                        title="Нажмите, чтобы отсортировать таблицу по этому полю">Фамилия</th>
+                    <th class="fourth-column cursor-pointer" data-bind="click: sortTable('name')" 
+                        title="Нажмите, чтобы отсортировать таблицу по этому полю">Имя</th>
+                    <th class="fifth-column cursor-pointer" data-bind="click: sortTable('phone')" 
+                        title="Нажмите, чтобы отсортировать таблицу по этому полю">Номер телефона</th>
                     <th class="sixth-column">Удалить</th>
                 </tr>
                 </thead>

@@ -13,6 +13,10 @@ h1 {
 }
 
 /* table */
+.cursor-pointer {
+    cursor: pointer;
+}
+
 .first-column {
     text-align: center;
     width: 6%;

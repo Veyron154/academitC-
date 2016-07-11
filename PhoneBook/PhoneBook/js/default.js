@@ -114,6 +114,26 @@
             self.filterText("");
             self.refreshTable();
         }
+
+        self.sortTable = function(column) {
+            self.tableItems.sort(function (a, b) {
+                var v1 = null;
+                var v2 = null;
+                if (column === "name") {
+                    v1 = a.itemName.toString();
+                    v2 = b.itemName.toString();
+                }
+                if (column === "surname") {
+                    v1 = a.itemSurname.toString().toLowerCase();
+                    v2 = b.itemSurname.toString().toLowerCase();
+                }
+                if (column === "phone") {
+                    v1 = a.itemPhone;
+                    v2 = b.itemPhone;
+                }
+                return v1 < v2 ? -1 : 1;
+            });
+        }
     }
 
     function TableItemViewModel(name, surname, phone, id) {
