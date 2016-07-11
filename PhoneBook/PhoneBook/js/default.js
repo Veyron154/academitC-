@@ -15,9 +15,12 @@
         self.isTopChecked = ko.observable(false);
         self.filterText = ko.observable("");
         self.needValidate = ko.observable(false);
+        self.countOfContacts = ko.observable(0);
+        self.sizeOfPage = ko.observable(5);
+        self.numberOfPage = ko.observable(1);
         self.url = ko.computed(function() {
             return "/PhoneBookService.svc/Excel?filter=" + self.filterText();
-        });
+        });  
 
         self.isTopChecked.subscribe(function(newValue) {
             _.each(self.tableItems(), function(item) {
@@ -26,9 +29,18 @@
         });
 
         self.refreshTable = function () {
+            ajaxPostRequest("/PhoneBookService.svc/GetCountOfContacts",
+                {
+                    filter: self.filterText()
+                })
+                .done(function (count) {
+                    self.countOfContacts(count);
+                });
             self.tableItems.removeAll();
             ajaxPostRequest("/PhoneBookService.svc/GetContacts", {
-                filter: self.filterText()
+                filter: self.filterText(),
+                sizeOfPage: self.sizeOfPage(),
+                numberOfPage: self.numberOfPage()
             }).done(function (contacts) {
                 _.each(contacts, function (contact) {
                     var addedItem = new TableItemViewModel(contact.name, contact.surname, contact.phone, contact.id);
@@ -99,7 +111,7 @@
                     var array = _.map(rows, function(r) { return r.itemId });
                     ajaxPostRequest("/PhoneBookService.svc/RemoveContacts ", {
                         ids: array
-                    }).always(function() {
+                    }).done(function() {
                         self.refreshTable();
                     });
                 }
@@ -107,11 +119,13 @@
         };
 
         self.executeFilter = function () {
+            self.numberOfPage(1);
             self.refreshTable();
         };
 
         self.cancelFilter = function () {
             self.filterText("");
+            self.numberOfPage(1);
             self.refreshTable();
         }
 
@@ -133,6 +147,16 @@
                 }
                 return v1 < v2 ? -1 : 1;
             });
+        }
+
+        self.getNextPage = function () {
+            self.numberOfPage(self.numberOfPage() + 1);
+            self.refreshTable();
+        }
+
+        self.getPrevPage = function () {
+            self.numberOfPage(self.numberOfPage() - 1);
+            self.refreshTable();
         }
     }
 

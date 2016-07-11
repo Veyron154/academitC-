@@ -25,20 +25,12 @@ namespace PhoneBook
             }
         }
 
-        public List<ContactDto> GetContacts(string filter)
+        public List<ContactDto> GetContacts(string filter, int sizeOfPage, int numberOfPage)
         {
-            using (var database = new PhoneBookDatabaseEntities())
-            {
-                return database.Contact
-                    .Select(c => new ContactDto
-                    {
-                        Id = c.Id,
-                        Name = c.Name,
-                        Surname = c.Surname,
-                        Phone = c.Phone
-                    }).Where(c => c.Surname.Contains(filter) || c.Name.Contains(filter) || c.Phone.Contains(filter))
+            return GetFullList(filter).OrderBy(c => c.Id)
+                    .Skip((numberOfPage - 1) * sizeOfPage)
+                    .Take(sizeOfPage)
                     .ToList();
-            }
         }
 
         public void RemoveContacts(int[] ids)
@@ -50,9 +42,14 @@ namespace PhoneBook
             }
         }
 
+        public int GetCountOfContacts(string filter)
+        {
+            return GetFullList(filter).Count;
+        }
+
         public Stream GetExcel(string filter)
         {
-            var table = GetContacts(filter);
+            var table = GetFullList(filter);
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Контакты");
@@ -83,6 +80,22 @@ namespace PhoneBook
                 HttpContext.Current.Response.ContentType = "application/octet-stream";
                 memoryStream.Position = 0;
                 return memoryStream;
+            }
+        }
+
+        private List<ContactDto> GetFullList(string filter)
+        {
+            using (var database = new PhoneBookDatabaseEntities())
+            {
+                return database.Contact
+                    .Select(c => new ContactDto
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        Surname = c.Surname,
+                        Phone = c.Phone
+                    }).Where(c => c.Surname.Contains(filter) || c.Name.Contains(filter) || c.Phone.Contains(filter))
+                    .ToList();
             }
         }
     }

@@ -44,6 +44,16 @@
                 </tbody>
             </table>
         </div>
+        <nav>
+            <ul class="pager">
+                <li data-bind="css: { 'disabled': numberOfPage() === 1 }">
+                    <a data-bind="click: getPrevPage" class="btn btn-default">Предыдущая</a>
+                </li>
+                <li data-bind="css: { 'disabled': numberOfPage() === Math.ceil(countOfContacts() / sizeOfPage())}">
+                    <a data-bind="click: getNextPage" class="btn btn-default">Следующая</a>
+                </li>
+            </ul>
+        </nav>
         <h1>Заполнение телефонной книги</h1>
         <form class="form-horizontal">
             <div class="form-inline bottom-input" data-bind="css: {'has-error': surname() === ''
