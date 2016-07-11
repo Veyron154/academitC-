@@ -50,47 +50,37 @@ namespace PhoneBook
 
         public Stream GetExcel(string filter)
         {
-            using (var database = new PhoneBookDatabaseEntities())
+            var table = GetContacts(filter);
+            using (var workbook = new XLWorkbook())
             {
-                var table = database.Contact.Select(c => new ContactDto
+                var worksheet = workbook.Worksheets.Add("Контакты");
+                worksheet.Cell("A1").Value = "Фамилия";
+                worksheet.Cell("B1").Value = "Имя";
+                worksheet.Cell("C1").Value = "Телефон";
+
+                var i = 2;
+                foreach (var contact in table)
                 {
-                    Id = c.Id,
-                    Name = c.Name,
-                    Surname = c.Surname,
-                    Phone = c.Phone
-                }).Where(c => c.Surname.Contains(filter) || c.Name.Contains(filter) || c.Phone.Contains(filter)).ToList();
-
-                using (var workbook = new XLWorkbook())
-                {
-                    var worksheet = workbook.Worksheets.Add("Контакты");
-                    worksheet.Cell("A1").Value = "Фамилия";
-                    worksheet.Cell("B1").Value = "Имя";
-                    worksheet.Cell("C1").Value = "Телефон";
-
-                    var i = 2;
-                    foreach (var contact in table)
-                    {
-                        worksheet.Cell("A" + i).Value = contact.Surname;
-                        worksheet.Cell("B" + i).Value = contact.Name;
-                        worksheet.Cell("C" + i).Value = contact.Phone;
-                        ++i;
-                    }
-
-                    var range = worksheet.Range("A1", "C" + (i - 1));
-                    range.FirstCell().Style
-                        .Font.SetBold()
-                        .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
-                        .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                    range.CreateTable();
-
-                    var memoryStream = new MemoryStream();
-                    workbook.SaveAs(memoryStream);
-
-                    HttpContext.Current.Response.Headers["Content-Disposition"] = "attachment; filename=contacts.xlsx";
-                    HttpContext.Current.Response.ContentType = "application/octet-stream";
-                    memoryStream.Position = 0;
-                    return memoryStream;
+                    worksheet.Cell("A" + i).Value = contact.Surname;
+                    worksheet.Cell("B" + i).Value = contact.Name;
+                    worksheet.Cell("C" + i).Value = contact.Phone;
+                    ++i;
                 }
+
+                var range = worksheet.Range("A1", "C" + (i - 1));
+                range.FirstCell().Style
+                    .Font.SetBold()
+                    .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
+                    .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                range.CreateTable();
+
+                var memoryStream = new MemoryStream();
+                workbook.SaveAs(memoryStream);
+
+                HttpContext.Current.Response.Headers["Content-Disposition"] = "attachment; filename=contacts.xlsx";
+                HttpContext.Current.Response.ContentType = "application/octet-stream";
+                memoryStream.Position = 0;
+                return memoryStream;
             }
         }
     }
