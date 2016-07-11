@@ -20,24 +20,22 @@
         });
 
         self.isTopChecked.subscribe(function(newValue) {
-            _.each(self.tableItems(),
-                function(item) {
-                    item.isChecked(newValue);
-                });
+            _.each(self.tableItems(), function(item) {
+                item.isChecked(newValue);
+            });
         });
 
         self.refreshTable = function () {
             self.tableItems.removeAll();
-            ajaxPostRequest("/PhoneBookService.svc/GetContacts", {filter: self.filterText()}).done(function (contacts) {
-                _.each(contacts,
-                    function (contact) {
-                        var addedItem = new TableItemViewModel(contact.name, contact.surname, contact.phone, contact.id);
-                        self.tableItems.push(addedItem);
-                    });
+            ajaxPostRequest("/PhoneBookService.svc/GetContacts", {
+                filter: self.filterText()
+            }).done(function (contacts) {
+                _.each(contacts, function (contact) {
+                    var addedItem = new TableItemViewModel(contact.name, contact.surname, contact.phone, contact.id);
+                    self.tableItems.push(addedItem);
+                });
             });
         }
-
-        var isFiltered = false;
 
         self.addTableItem = function() {
             self.needValidate(true);
@@ -51,8 +49,7 @@
                 return;
             }
 
-            var isUniquePhone = _.every(self.tableItems(),
-                function(item) {
+            var isUniquePhone = _.every(self.tableItems(), function(item) {
                     return item.itemPhone !== self.phone();
                 });
 
@@ -66,18 +63,15 @@
                 return;
             }
 
-            ajaxPostRequest("/PhoneBookService.svc/AddContact",
-                {
-                    contact: {
-                        name: self.name(),
-                        surname: self.surname(),
-                        phone: self.phone()
-                    }
-                }).always(function () { self.refreshTable(); });
-
-            if (isFiltered) {
-                self.executeFilter();
-            }
+            ajaxPostRequest("/PhoneBookService.svc/AddContact", {
+                contact: {
+                    name: self.name(),
+                    surname: self.surname(),
+                    phone: self.phone()
+                }
+            }).always(function() {
+                 self.refreshTable();
+            });
 
             self.name("");
             self.surname("");
@@ -103,20 +97,22 @@
                 cancelButton: "Отмена",
                 confirm: function () {
                     var array = _.map(rows, function(r) { return r.itemId });
-                    ajaxPostRequest("/PhoneBookService.svc/RemoveContacts ", { ids: array}).always(function() { self.refreshTable() });
+                    ajaxPostRequest("/PhoneBookService.svc/RemoveContacts ", {
+                        ids: array
+                    }).always(function() {
+                        self.refreshTable();
+                    });
                 }
             });
         };
 
-        self.executeFilter = function() {
+        self.executeFilter = function () {
             self.refreshTable();
-            isFiltered = true;
         };
 
         self.cancelFilter = function () {
             self.filterText("");
             self.refreshTable();
-            isFiltered = false;
         }
     }
 
