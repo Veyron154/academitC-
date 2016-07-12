@@ -131,6 +131,7 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
+    <Compile Include="TableDataDto.cs" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

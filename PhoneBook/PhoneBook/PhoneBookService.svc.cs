@@ -1,5 +1,4 @@
 ﻿
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -15,18 +14,19 @@ namespace PhoneBook
         {
             using (var database = new PhoneBookDatabaseEntities())
             {
-                var uniquePhone = database.Contact.Where(c => c.Phone == contact.Phone).ToList().Count;
+                var isNotUniquePhone = database.Contact.Any(c => c.Phone == contact.Phone);
 
-                if (uniquePhone > 0)
+                if (isNotUniquePhone)
                 {
                     return new BaseResponseDto
                     {
                         Success = false,
-                        Message = "Контакт с номером " + contact.Phone + " уже существует"
+                        Message = $"Контакт с номером {contact.Phone} уже существует"
                     };
                 }
 
-                if (contact.Phone == "" || contact.Name == "" || contact.Surname == "")
+                if (string.IsNullOrEmpty(contact.Phone) || string.IsNullOrEmpty(contact.Name) || 
+                    string.IsNullOrEmpty(contact.Surname))
                 {
                     return new BaseResponseDto
                     {
@@ -50,12 +50,20 @@ namespace PhoneBook
             }
         }
 
-        public List<ContactDto> GetContacts(string filter, int sizeOfPage, int numberOfPage)
+        public TableDataDto GetContacts(string filter, int sizeOfPage, int numberOfPage)
         {
-            return GetFullList(filter).OrderBy(c => c.Id)
+            using (var database = new PhoneBookDatabaseEntities())
+            {
+                var fullData = GetFullData(filter, database.Contact);
+                return new TableDataDto
+                {
+                    ContactsList = fullData.OrderBy(c => c.Surname)
                     .Skip((numberOfPage - 1) * sizeOfPage)
                     .Take(sizeOfPage)
-                    .ToList();
+                    .ToList(),
+                    CountOfContacts = fullData.Count()
+            };
+            }
         }
 
         public BaseResponseDto RemoveContacts(int[] ids)
@@ -71,62 +79,55 @@ namespace PhoneBook
                 };
             }
         }
-
-        public int GetCountOfContacts(string filter)
-        {
-            return GetFullList(filter).Count;
-        }
-
+        
         public Stream GetExcel(string filter)
-        {
-            var table = GetFullList(filter);
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.Worksheets.Add("Контакты");
-                worksheet.Cell("A1").Value = "Фамилия";
-                worksheet.Cell("B1").Value = "Имя";
-                worksheet.Cell("C1").Value = "Телефон";
-
-                var i = 2;
-                foreach (var contact in table)
-                {
-                    worksheet.Cell("A" + i).Value = contact.Surname;
-                    worksheet.Cell("B" + i).Value = contact.Name;
-                    worksheet.Cell("C" + i).Value = contact.Phone;
-                    ++i;
-                }
-
-                var range = worksheet.Range("A1", "C" + (i - 1));
-                range.FirstCell().Style
-                    .Font.SetBold()
-                    .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
-                    .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                range.CreateTable();
-
-                var memoryStream = new MemoryStream();
-                workbook.SaveAs(memoryStream);
-
-                HttpContext.Current.Response.Headers["Content-Disposition"] = "attachment; filename=contacts.xlsx";
-                HttpContext.Current.Response.ContentType = "application/octet-stream";
-                memoryStream.Position = 0;
-                return memoryStream;
-            }
-        }
-
-        private List<ContactDto> GetFullList(string filter)
         {
             using (var database = new PhoneBookDatabaseEntities())
             {
-                return database.Contact
-                    .Select(c => new ContactDto
+                var table = GetFullData(filter, database.Contact).ToList();
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("Контакты");
+                    worksheet.Cell("A1").Value = "Фамилия";
+                    worksheet.Cell("B1").Value = "Имя";
+                    worksheet.Cell("C1").Value = "Телефон";
+
+                    var i = 2;
+                    foreach (var contact in table)
                     {
-                        Id = c.Id,
-                        Name = c.Name,
-                        Surname = c.Surname,
-                        Phone = c.Phone
-                    }).Where(c => c.Surname.Contains(filter) || c.Name.Contains(filter) || c.Phone.Contains(filter))
-                    .ToList();
+                        worksheet.Cell("A" + i).Value = contact.Surname;
+                        worksheet.Cell("B" + i).Value = contact.Name;
+                        worksheet.Cell("C" + i).Value = contact.Phone;
+                        ++i;
+                    }
+
+                    var range = worksheet.Range("A1", "C" + (i - 1));
+                    range.FirstCell().Style
+                        .Font.SetBold()
+                        .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
+                        .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    range.CreateTable();
+
+                    var memoryStream = new MemoryStream();
+                    workbook.SaveAs(memoryStream);
+
+                    HttpContext.Current.Response.Headers["Content-Disposition"] = "attachment; filename=contacts.xlsx";
+                    HttpContext.Current.Response.ContentType = "application/octet-stream";
+                    memoryStream.Position = 0;
+                    return memoryStream;
+                }
             }
+        }
+
+        private static IQueryable<ContactDto> GetFullData(string filter, IQueryable<Contact> contact)
+        {
+            return contact.Select(c => new ContactDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Surname = c.Surname,
+                Phone = c.Phone
+            }).Where(c => c.Surname.Contains(filter) || c.Name.Contains(filter) || c.Phone.Contains(filter));
         }
     }
 }

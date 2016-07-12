@@ -29,21 +29,17 @@
         });
 
         self.refreshTable = function () {
-            ajaxPostRequest("/PhoneBookService.svc/GetCountOfContacts", {
-                    filter: self.filterText()
-                }).done(function (count) {
-                    self.countOfContacts(count);
-                });
             self.tableItems.removeAll();
             ajaxPostRequest("/PhoneBookService.svc/GetContacts", {
                 filter: self.filterText(),
                 sizeOfPage: self.sizeOfPage(),
                 numberOfPage: self.numberOfPage()
-            }).done(function (contacts) {
-                _.each(contacts, function (contact) {
+            }).done(function (data) {
+                _.each(data.contactsList, function (contact) {
                     var addedItem = new TableItemViewModel(contact.name, contact.surname, contact.phone, contact.id);
                     self.tableItems.push(addedItem);
                 });
+                self.countOfContacts(data.countOfContacts)
             });
         }
 
@@ -52,16 +48,6 @@
 
             if (self.surname() === "" || self.name() === "" || self.phone() === "") {
                 showAlert("Заполните выделенные поля");
-                return;
-            }
-
-            var isUniquePhone = _.every(self.tableItems(), function(item) {
-                    return item.itemPhone !== self.phone();
-                });
-
-
-            if (!isUniquePhone) {
-                showAlert("Контакт с номером " + self.phone() + " уже существует");
                 return;
             }
 
