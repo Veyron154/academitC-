@@ -50,10 +50,14 @@ h1 {
 .sixth-column button {
     width: 40px;
     vertical-align: middle;
-    border-radius: 0;
 }
 
 /* end table */
+
+.count-of-contacts {
+    display: block;
+    text-align: center;
+}
 
 /* form */
 .main form {

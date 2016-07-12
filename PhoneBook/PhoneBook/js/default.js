@@ -20,7 +20,10 @@
         self.numberOfPage = ko.observable(1);
         self.url = ko.computed(function() {
             return "/PhoneBookService.svc/Excel?filter=" + self.filterText();
-        });  
+        });
+        self.countOfContactsText = ko.computed(function() {
+            return "Число контактов: " + self.countOfContacts();
+        });
 
         self.isTopChecked.subscribe(function(newValue) {
             _.each(self.tableItems(), function(item) {

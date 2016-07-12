@@ -44,6 +44,7 @@
                 </tbody>
             </table>
         </div>
+        <label data-bind="text: countOfContactsText" class="count-of-contacts"></label>
         <nav>
             <ul class="pager">
                 <li data-bind="css: { 'disabled': numberOfPage() === 1 }">

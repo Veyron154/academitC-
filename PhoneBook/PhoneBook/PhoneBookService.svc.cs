@@ -88,6 +88,9 @@ namespace PhoneBook
                 using (var workbook = new XLWorkbook())
                 {
                     var worksheet = workbook.Worksheets.Add("Контакты");
+
+                    worksheet.ColumnWidth = 20;
+                   
                     worksheet.Cell("A1").Value = "Фамилия";
                     worksheet.Cell("B1").Value = "Имя";
                     worksheet.Cell("C1").Value = "Телефон";
@@ -102,6 +105,13 @@ namespace PhoneBook
                     }
 
                     var range = worksheet.Range("A1", "C" + (i - 1));
+
+                    var rngNumbers = range.Range("C2", "C" + (i - 1));
+                    rngNumbers.Style.NumberFormat.Format = "@";
+
+                    var rngHeader = range.Range("A1", "C1");
+                    rngHeader.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
                     range.FirstCell().Style
                         .Font.SetBold()
                         .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
