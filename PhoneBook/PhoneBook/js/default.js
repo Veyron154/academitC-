@@ -29,11 +29,9 @@
         });
 
         self.refreshTable = function () {
-            ajaxPostRequest("/PhoneBookService.svc/GetCountOfContacts",
-                {
+            ajaxPostRequest("/PhoneBookService.svc/GetCountOfContacts", {
                     filter: self.filterText()
-                })
-                .done(function (count) {
+                }).done(function (count) {
                     self.countOfContacts(count);
                 });
             self.tableItems.removeAll();
@@ -53,11 +51,7 @@
             self.needValidate(true);
 
             if (self.surname() === "" || self.name() === "" || self.phone() === "") {
-                $.alert({
-                    title: "Ошибка заполнения",
-                    content: "Заполните выделенные поля",
-                    confirmButton: "OK"
-                });
+                showAlert("Заполните выделенные поля");
                 return;
             }
 
@@ -67,11 +61,7 @@
 
 
             if (!isUniquePhone) {
-                $.alert({
-                    title: "Ошибка заполнения",
-                    content: "Контакт с номером " + self.phone() + " уже существует",
-                    confirmButton: "OK"
-                });
+                showAlert("Контакт с номером " + self.phone() + " уже существует");
                 return;
             }
 
@@ -81,7 +71,11 @@
                     surname: self.surname(),
                     phone: self.phone()
                 }
-            }).always(function() {
+            }).done(function (baseResponse) {
+                if (baseResponse.success === false) {
+                    showAlert(baseResponse.message);
+                    return;
+                }
                  self.refreshTable();
             });
 
@@ -179,6 +173,14 @@
             method: "POST",
             processData: false,
             contentType: "application/json"
+        });
+    }
+
+    function showAlert(message) {
+        $.alert({
+            title: "Ошибка заполнения",
+            content: message,
+            confirmButton: "OK"
         });
     }
 })($, ko, _)

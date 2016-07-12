@@ -11,10 +11,30 @@ namespace PhoneBook
 {
     public class PhoneBookService : IPhoneBookService
     {
-        public void AddContact(ContactDto contact)
+        public BaseResponseDto AddContact(ContactDto contact)
         {
             using (var database = new PhoneBookDatabaseEntities())
             {
+                var uniquePhone = database.Contact.Where(c => c.Phone == contact.Phone).ToList().Count;
+
+                if (uniquePhone > 0)
+                {
+                    return new BaseResponseDto
+                    {
+                        Success = false,
+                        Message = "Контакт с номером " + contact.Phone + " уже существует"
+                    };
+                }
+
+                if (contact.Phone == "" || contact.Name == "" || contact.Surname == "")
+                {
+                    return new BaseResponseDto
+                    {
+                        Success = false,
+                        Message = "Не все поля заполнены"
+                    };
+                }
+
                 database.Contact.Add(new Contact
                 {
                     Name = contact.Name,
@@ -22,6 +42,11 @@ namespace PhoneBook
                     Phone = contact.Phone
                 });
                 database.SaveChanges();
+                return new BaseResponseDto
+                {
+                    Success = true,
+                    Message = ""
+                };
             }
         }
 
@@ -33,12 +58,17 @@ namespace PhoneBook
                     .ToList();
         }
 
-        public void RemoveContacts(int[] ids)
+        public BaseResponseDto RemoveContacts(int[] ids)
         {
             using (var database = new PhoneBookDatabaseEntities())
             {
                 database.Contact.RemoveRange(database.Contact.Where(c => ids.Contains(c.Id)));
                 database.SaveChanges();
+                return new BaseResponseDto
+                {
+                    Success = true,
+                    Message = ""
+                };
             }
         }
 
