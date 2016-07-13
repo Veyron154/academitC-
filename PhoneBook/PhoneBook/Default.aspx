@@ -44,7 +44,7 @@
                 <tr>
                     <td class="first-column"><input type="checkbox" title="Выделить"
                                                     data-bind="checked: isChecked"/></td>
-                    <td class="second-column" data-bind="text: ($index() + 1)"></td>
+                    <td class="second-column" data-bind="text: ($index() + ($parent.sizeOfPage() * ($parent.numberOfPage() - 1)) + 1)"></td>
                     <td class="third-column" data-bind="text: itemSurname"></td>
                     <td class="fourth-column" data-bind="text: itemName"></td>
                     <td class="fifth-column" data-bind="text: itemPhone"></td>
