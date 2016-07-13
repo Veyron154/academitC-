@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -43,6 +44,7 @@ namespace PhoneBook
                 });
 
                 database.SaveChanges();
+
                 return new BaseResponseDto
                 {
                     Success = true,
@@ -56,11 +58,13 @@ namespace PhoneBook
             using (var database = new PhoneBookDatabaseEntities())
             {
                 var fullData = GetFullData(requestData.Filter, database.Contact, requestData.SortCommand, requestData.IsSortedDesc);
+
                 return new TableDataDto
                 {
-                    ContactsList = fullData.Skip((requestData.NumberOfPage - 1) * requestData.SizeOfPage)
-                    .Take(requestData.SizeOfPage)
-                    .ToList(),
+                    ContactsList = fullData
+                        .Skip((requestData.NumberOfPage - 1) * requestData.SizeOfPage)
+                        .Take(requestData.SizeOfPage)
+                        .ToList(),
                     CountOfContacts = fullData.Count()
                 };
             }
@@ -72,6 +76,7 @@ namespace PhoneBook
             {
                 database.Contact.RemoveRange(database.Contact.Where(c => ids.Contains(c.Id)));
                 database.SaveChanges();
+
                 return new BaseResponseDto
                 {
                     Success = true,
@@ -82,50 +87,54 @@ namespace PhoneBook
         
         public Stream GetExcel(string filter, SortCommand sortCommand, bool isSortedDesc)
         {
+            List<ContactDto> table;
             using (var database = new PhoneBookDatabaseEntities())
             {
-                var table = GetFullData(filter, database.Contact, sortCommand, isSortedDesc).ToList();
-                using (var workbook = new XLWorkbook())
-                {
-                    var worksheet = workbook.Worksheets.Add("Контакты");
+                table = GetFullData(filter, database.Contact, sortCommand, isSortedDesc).ToList();
+            }
 
-                    worksheet.ColumnWidth = 20;
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Контакты");
+
+                worksheet.ColumnWidth = 20;
                    
-                    worksheet.Cell("A1").Value = "Фамилия";
-                    worksheet.Cell("B1").Value = "Имя";
-                    worksheet.Cell("C1").Value = "Телефон";
+                worksheet.Cell("A1").Value = "Фамилия";
+                worksheet.Cell("B1").Value = "Имя";
+                worksheet.Cell("C1").Value = "Телефон";
 
-                    var i = 2;
-                    foreach (var contact in table)
-                    {
-                        worksheet.Cell("A" + i).Value = contact.Surname;
-                        worksheet.Cell("B" + i).Value = contact.Name;
-                        worksheet.Cell("C" + i).Value = contact.Phone;
-                        ++i;
-                    }
-
-                    var range = worksheet.Range("A1", "C" + (i - 1));
-
-                    var rngNumbers = range.Range("C2", "C" + (i - 1));
-                    rngNumbers.Style.NumberFormat.Format = "@";
-
-                    var rngHeader = range.Range("A1", "C1");
-                    rngHeader.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-
-                    range.FirstCell().Style
-                        .Font.SetBold()
-                        .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
-                        .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                    range.CreateTable();
-
-                    var memoryStream = new MemoryStream();
-                    workbook.SaveAs(memoryStream);
-
-                    HttpContext.Current.Response.Headers["Content-Disposition"] = "attachment; filename=contacts.xlsx";
-                    HttpContext.Current.Response.ContentType = "application/octet-stream";
-                    memoryStream.Position = 0;
-                    return memoryStream;
+                var i = 2;
+                foreach (var contact in table)
+                {
+                    worksheet.Cell("A" + i).Value = contact.Surname;
+                    worksheet.Cell("B" + i).Value = contact.Name;
+                    worksheet.Cell("C" + i).Value = contact.Phone;
+                    ++i;
                 }
+
+                var range = worksheet.Range("A1", "C" + (i - 1));
+
+                var rngNumbers = range.Range("C2", "C" + (i - 1));
+                rngNumbers.Style.NumberFormat.Format = "@";
+
+                var rngHeader = range.Range("A1", "C1");
+                rngHeader.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                range.FirstCell()
+                    .Style
+                    .Font.SetBold()
+                    .Fill.SetBackgroundColor(XLColor.CornflowerBlue)
+                    .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                range.CreateTable();
+
+                var memoryStream = new MemoryStream();
+                workbook.SaveAs(memoryStream);
+
+                HttpContext.Current.Response.Headers["Content-Disposition"] = "attachment; filename=contacts.xlsx";
+                HttpContext.Current.Response.ContentType = "application/octet-stream";
+
+                memoryStream.Position = 0;
+                return memoryStream;
             }
         }
 
@@ -152,18 +161,15 @@ namespace PhoneBook
                 }
                 return data.OrderBy(c => c.Phone);
             }
-            else
+            if (sortCommand == SortCommand.Name)
             {
-                if (sortCommand == SortCommand.Name)
-                {
-                    return data.OrderByDescending(c => c.Name);
-                }
-                if (sortCommand == SortCommand.Surname)
-                {
-                    return data.OrderByDescending(c => c.Surname);
-                }
-                return data.OrderByDescending(c => c.Phone);
+                return data.OrderByDescending(c => c.Name);
             }
+            if (sortCommand == SortCommand.Surname)
+            {
+                return data.OrderByDescending(c => c.Surname);
+            }
+            return data.OrderByDescending(c => c.Phone);
         }
     }
 }

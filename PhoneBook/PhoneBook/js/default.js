@@ -8,7 +8,6 @@
     function PhoneBookViewModel() {
         var self = this;
         self.tableItems = ko.observableArray([]);
-        self.tmpTableItems = ko.observableArray([]);
         self.name = ko.observable("");
         self.surname = ko.observable("");
         self.phone = ko.observable("");
@@ -18,13 +17,13 @@
         self.countOfContacts = ko.observable(0);
         self.sizeOfPage = ko.observable(5);
         self.numberOfPage = ko.observable(1);
-        self.sortCommand = ko.observable(1);
+        self.sortCommand = ko.observable(SortCommand.Surname);
         self.isSortedByName = ko.observable(false);
         self.isSortedBySurname = ko.observable(true);
         self.isSortedByPhone = ko.observable(false);
         self.isSortedDesc = ko.observable(false);
 
-        self.url = ko.computed(function() {
+        self.urlForExcel = ko.computed(function() {
             return "/PhoneBookService.svc/Excel?filter=" + self.filterText() + "&sortCommand=" + self.sortCommand() +
                 "&isSortedDesc=" + self.isSortedDesc();
         });
@@ -38,10 +37,8 @@
             });
         });
 
-        self.refreshTable = function () {
-            self.tmpTableItems.removeAll();
-            ajaxPostRequest("/PhoneBookService.svc/GetContacts",
-            {
+        self.refreshTable = function() {
+            ajaxPostRequest("/PhoneBookService.svc/GetContacts", {
                 requestData: {
                     filter: self.filterText(),
                     sizeOfPage: self.sizeOfPage(),
@@ -50,11 +47,10 @@
                     isSortedDesc: self.isSortedDesc()
                 }
             }).done(function (data) {
-                _.each(data.contactsList, function (contact) {
-                    var addedItem = new TableItemViewModel(contact.name, contact.surname, contact.phone, contact.id);
-                    self.tmpTableItems.push(addedItem);
-                    self.tableItems(self.tmpTableItems());
+                var tmpList = _.map(data.contactsList, function(contact) {
+                    return new TableItemViewModel(contact.name, contact.surname, contact.phone, contact.id);
                 });
+                self.tableItems(tmpList);
                 self.countOfContacts(data.countOfContacts);
             });
         }
@@ -104,10 +100,13 @@
                 confirmButton: "OK",
                 cancelButton: "Отмена",
                 confirm: function () {
-                    var array = _.map(rows, function(r) { return r.itemId });
+                    var array = _.map(rows, function(r) {
+                        return r.itemId;
+                    });
                     ajaxPostRequest("/PhoneBookService.svc/RemoveContacts ", {
                         ids: array
-                    }).done(function() {
+                    }).done(function () {
+                        self.numberOfPage(1);
                         self.refreshTable();
                     });
                 }
@@ -126,7 +125,7 @@
         }
 
         self.sortByName = function() {
-            self.sortCommand(0);
+            self.sortCommand(SortCommand.Name);
             if (self.isSortedByName()) {
                 self.isSortedDesc(!self.isSortedDesc());
             } else {
@@ -140,7 +139,7 @@
         }
 
         self.sortBySurname = function () {
-            self.sortCommand(1);
+            self.sortCommand(SortCommand.Surname);
             if (self.isSortedBySurname()) {
                 self.isSortedDesc(!self.isSortedDesc());
             } else {
@@ -154,7 +153,7 @@
         }
 
         self.sortByPhone = function () {
-            self.sortCommand(2);
+            self.sortCommand(SortCommand.Phone);
             if (self.isSortedByPhone()) {
                 self.isSortedDesc(!self.isSortedDesc());
             } else {
@@ -206,5 +205,11 @@
             content: message,
             confirmButton: "OK"
         });
+    }
+
+    window.SortCommand = {
+        Name: 0,
+        Surname: 1,
+        Phone: 2
     }
 })($, ko, _)

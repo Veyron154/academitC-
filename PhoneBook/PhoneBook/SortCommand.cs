@@ -3,6 +3,8 @@ namespace PhoneBook
 {
     public enum SortCommand
     {
-        Name, Surname, Phone 
+        Name = 0,
+        Surname = 1,
+        Phone = 2 
     }
 }
