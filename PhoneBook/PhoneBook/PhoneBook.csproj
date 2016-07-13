@@ -124,6 +124,7 @@
       <DependentUpon>PhoneBookService.svc</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestDataDto.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -131,6 +132,7 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
+    <Compile Include="SortCommand.cs" />
     <Compile Include="TableDataDto.cs" />
   </ItemGroup>
   <ItemGroup />

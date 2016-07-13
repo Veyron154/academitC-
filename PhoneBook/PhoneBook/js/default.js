@@ -1,10 +1,9 @@
 ﻿(function($, ko, _) {
-    $(document)
-        .ready(function() {
-            var vm = new PhoneBookViewModel();
-            ko.applyBindings(vm);
-            vm.refreshTable();
-        });
+    $(document).ready(function() {
+        var vm = new PhoneBookViewModel();
+        ko.applyBindings(vm);
+        vm.refreshTable();
+    });
 
     function PhoneBookViewModel() {
         var self = this;
@@ -18,8 +17,15 @@
         self.countOfContacts = ko.observable(0);
         self.sizeOfPage = ko.observable(5);
         self.numberOfPage = ko.observable(1);
+        self.sortCommand = ko.observable(1);
+        self.isSortedByName = ko.observable(false);
+        self.isSortedBySurname = ko.observable(true);
+        self.isSortedByPhone = ko.observable(false);
+        self.isSortedDesc = ko.observable(false);
+
         self.url = ko.computed(function() {
-            return "/PhoneBookService.svc/Excel?filter=" + self.filterText();
+            return "/PhoneBookService.svc/Excel?filter=" + self.filterText() + "&sortCommand=" + self.sortCommand() +
+                "&isSortedDesc=" + self.isSortedDesc();
         });
         self.countOfContactsText = ko.computed(function() {
             return "Число контактов: " + self.countOfContacts();
@@ -33,16 +39,21 @@
 
         self.refreshTable = function () {
             self.tableItems.removeAll();
-            ajaxPostRequest("/PhoneBookService.svc/GetContacts", {
-                filter: self.filterText(),
-                sizeOfPage: self.sizeOfPage(),
-                numberOfPage: self.numberOfPage()
+            ajaxPostRequest("/PhoneBookService.svc/GetContacts",
+            {
+                requestData: {
+                    filter: self.filterText(),
+                    sizeOfPage: self.sizeOfPage(),
+                    numberOfPage: self.numberOfPage(),
+                    sortCommand: self.sortCommand(),
+                    isSortedDesc: self.isSortedDesc()
+                }
             }).done(function (data) {
                 _.each(data.contactsList, function (contact) {
                     var addedItem = new TableItemViewModel(contact.name, contact.surname, contact.phone, contact.id);
                     self.tableItems.push(addedItem);
                 });
-                self.countOfContacts(data.countOfContacts)
+                self.countOfContacts(data.countOfContacts);
             });
         }
 
@@ -65,7 +76,7 @@
                     showAlert(baseResponse.message);
                     return;
                 }
-                 self.refreshTable();
+                self.refreshTable();
             });
 
             self.name("");
@@ -112,24 +123,46 @@
             self.refreshTable();
         }
 
-        self.sortTable = function(column) {
-            self.tableItems.sort(function (a, b) {
-                var v1 = null;
-                var v2 = null;
-                if (column === "name") {
-                    v1 = a.itemName.toString();
-                    v2 = b.itemName.toString();
-                }
-                if (column === "surname") {
-                    v1 = a.itemSurname.toString().toLowerCase();
-                    v2 = b.itemSurname.toString().toLowerCase();
-                }
-                if (column === "phone") {
-                    v1 = a.itemPhone;
-                    v2 = b.itemPhone;
-                }
-                return v1 < v2 ? -1 : 1;
-            });
+        self.sortByName = function() {
+            self.sortCommand(0);
+            if (self.isSortedByName()) {
+                self.isSortedDesc(!self.isSortedDesc());
+            } else {
+                self.isSortedDesc(false);
+            }
+            self.isSortedByName(true);
+            self.isSortedBySurname(false);
+            self.isSortedByPhone(false);
+            self.numberOfPage(1);
+            self.refreshTable();
+        }
+
+        self.sortBySurname = function () {
+            self.sortCommand(1);
+            if (self.isSortedBySurname()) {
+                self.isSortedDesc(!self.isSortedDesc());
+            } else {
+                self.isSortedDesc(false);
+            }
+            self.isSortedBySurname(true);
+            self.isSortedByName(false);
+            self.isSortedByPhone(false);
+            self.numberOfPage(1);
+            self.refreshTable();
+        }
+
+        self.sortByPhone = function () {
+            self.sortCommand(2);
+            if (self.isSortedByPhone()) {
+                self.isSortedDesc(!self.isSortedDesc());
+            } else {
+                self.isSortedDesc(false);
+            }
+            self.isSortedByPhone(true);
+            self.isSortedByName(false);
+            self.isSortedBySurname(false);
+            self.numberOfPage(1);
+            self.refreshTable();
         }
 
         self.getNextPage = function () {

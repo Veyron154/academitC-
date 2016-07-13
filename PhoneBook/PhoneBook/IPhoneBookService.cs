@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿
 using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -16,7 +16,7 @@ namespace PhoneBook
         [OperationContract]
         [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.WrappedRequest,
             RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
-        TableDataDto GetContacts(string filter, int sizeOfPage, int numberOfPage);
+        TableDataDto GetContacts(RequestDataDto requestData);
 
         [OperationContract]
         [WebInvoke(Method = "POST", BodyStyle = WebMessageBodyStyle.WrappedRequest,
@@ -26,7 +26,7 @@ namespace PhoneBook
         [OperationContract]
         [WebInvoke(Method = "GET", BodyStyle = WebMessageBodyStyle.WrappedRequest,
                    RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, 
-                    UriTemplate = "/Excel?filter={filter}")]
-        Stream GetExcel(string filter);
+                    UriTemplate = "/Excel?filter={filter}&sortCommand={sortCommand}&isSortedDesc={isSortedDesc}")]
+        Stream GetExcel(string filter, SortCommand sortCommand, bool isSortedDesc);
     }
 }

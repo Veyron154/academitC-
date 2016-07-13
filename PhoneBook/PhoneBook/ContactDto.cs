@@ -17,8 +17,5 @@ namespace PhoneBook
 
         [DataMember(Name = "phone")]
         public string Phone { get; set; }
-
-        [DataMember(Name = "countOfContacts")]
-        public int CountOfContacts { get; set; }
     }
 }

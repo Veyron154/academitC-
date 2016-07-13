@@ -50,19 +50,18 @@ namespace PhoneBook
             }
         }
 
-        public TableDataDto GetContacts(string filter, int sizeOfPage, int numberOfPage)
+        public TableDataDto GetContacts(RequestDataDto requestData)
         {
             using (var database = new PhoneBookDatabaseEntities())
             {
-                var fullData = GetFullData(filter, database.Contact);
+                var fullData = GetFullData(requestData.Filter, database.Contact, requestData.SortCommand, requestData.IsSortedDesc);
                 return new TableDataDto
                 {
-                    ContactsList = fullData.OrderBy(c => c.Surname)
-                    .Skip((numberOfPage - 1) * sizeOfPage)
-                    .Take(sizeOfPage)
+                    ContactsList = fullData.Skip((requestData.NumberOfPage - 1) * requestData.SizeOfPage)
+                    .Take(requestData.SizeOfPage)
                     .ToList(),
                     CountOfContacts = fullData.Count()
-            };
+                };
             }
         }
 
@@ -80,11 +79,11 @@ namespace PhoneBook
             }
         }
         
-        public Stream GetExcel(string filter)
+        public Stream GetExcel(string filter, SortCommand sortCommand, bool isSortedDesc)
         {
             using (var database = new PhoneBookDatabaseEntities())
             {
-                var table = GetFullData(filter, database.Contact).ToList();
+                var table = GetFullData(filter, database.Contact, sortCommand, isSortedDesc).ToList();
                 using (var workbook = new XLWorkbook())
                 {
                     var worksheet = workbook.Worksheets.Add("Контакты");
@@ -129,15 +128,41 @@ namespace PhoneBook
             }
         }
 
-        private static IQueryable<ContactDto> GetFullData(string filter, IQueryable<Contact> contact)
+        private static IQueryable<ContactDto> GetFullData(string filter, IQueryable<Contact> contact, SortCommand sortCommand, 
+            bool isSortedDesc)
         {
-            return contact.Select(c => new ContactDto
+            var data =  contact.Select(c => new ContactDto
             {
                 Id = c.Id,
                 Name = c.Name,
                 Surname = c.Surname,
                 Phone = c.Phone
             }).Where(c => c.Surname.Contains(filter) || c.Name.Contains(filter) || c.Phone.Contains(filter));
+
+            if (!isSortedDesc)
+            {
+                if (sortCommand == SortCommand.Name)
+                {
+                    return data.OrderBy(c => c.Name);
+                }
+                if (sortCommand == SortCommand.Surname)
+                {
+                    return data.OrderBy(c => c.Surname);
+                }
+                return data.OrderBy(c => c.Phone);
+            }
+            else
+            {
+                if (sortCommand == SortCommand.Name)
+                {
+                    return data.OrderByDescending(c => c.Name);
+                }
+                if (sortCommand == SortCommand.Surname)
+                {
+                    return data.OrderByDescending(c => c.Surname);
+                }
+                return data.OrderByDescending(c => c.Phone);
+            }
         }
     }
 }

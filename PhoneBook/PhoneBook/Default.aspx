@@ -19,12 +19,24 @@
                     <th class="first-column"><input class="top-checkbox" type="checkbox"
                                                     data-bind="checked: isTopChecked" title="Выделить все"/></th>
                     <th class="second-column">№</th>
-                    <th class="third-column cursor-pointer" data-bind="click: sortTable('surname')" 
-                        title="Нажмите, чтобы отсортировать таблицу по этому полю">Фамилия</th>
-                    <th class="fourth-column cursor-pointer" data-bind="click: sortTable('name')" 
-                        title="Нажмите, чтобы отсортировать таблицу по этому полю">Имя</th>
-                    <th class="fifth-column cursor-pointer" data-bind="click: sortTable('phone')" 
-                        title="Нажмите, чтобы отсортировать таблицу по этому полю">Номер телефона</th>
+                    <th class="third-column cursor-pointer" data-bind="click: sortBySurname" 
+                        title="Нажмите, чтобы отсортировать таблицу по этому полю">Фамилия
+                        <span data-bind="css: {'glyphicon-chevron-down': isSortedBySurname() && !isSortedDesc(),
+                            'glyphicon-chevron-up': isSortedBySurname() && isSortedDesc(),
+                            'glyphicon': isSortedBySurname()}"></span>
+                    </th>
+                    <th class="fourth-column cursor-pointer" data-bind="click: sortByName" 
+                        title="Нажмите, чтобы отсортировать таблицу по этому полю">Имя
+                        <span data-bind="css: {'glyphicon-chevron-down': isSortedByName() && !isSortedDesc(),
+                            'glyphicon-chevron-up': isSortedByName() && isSortedDesc(),
+                            'glyphicon': isSortedByName()}"></span>
+                    </th>
+                    <th class="fifth-column cursor-pointer" data-bind="click: sortByPhone" 
+                        title="Нажмите, чтобы отсортировать таблицу по этому полю">Номер телефона
+                        <span data-bind="css: {'glyphicon-chevron-down': isSortedByPhone() && !isSortedDesc(),
+                            'glyphicon-chevron-up': isSortedByPhone() && isSortedDesc(),
+                            'glyphicon': isSortedByPhone()}"></span>
+                    </th>
                     <th class="sixth-column">Удалить</th>
                 </tr>
                 </thead>
@@ -38,7 +50,8 @@
                     <td class="fifth-column" data-bind="text: itemPhone"></td>
                     <td class="sixth-column" data-bind="click: $parent.removeTableItem">
                         <button type='button' class='btn btn-default'>
-                            <span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
+                            <span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span>
+                        </button>
                     </td>
                 </tr>
                 </tbody>
