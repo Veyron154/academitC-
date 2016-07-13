@@ -8,6 +8,7 @@
     function PhoneBookViewModel() {
         var self = this;
         self.tableItems = ko.observableArray([]);
+        self.tmpTableItems = ko.observableArray([]);
         self.name = ko.observable("");
         self.surname = ko.observable("");
         self.phone = ko.observable("");
@@ -38,7 +39,7 @@
         });
 
         self.refreshTable = function () {
-            self.tableItems.removeAll();
+            self.tmpTableItems.removeAll();
             ajaxPostRequest("/PhoneBookService.svc/GetContacts",
             {
                 requestData: {
@@ -51,7 +52,8 @@
             }).done(function (data) {
                 _.each(data.contactsList, function (contact) {
                     var addedItem = new TableItemViewModel(contact.name, contact.surname, contact.phone, contact.id);
-                    self.tableItems.push(addedItem);
+                    self.tmpTableItems.push(addedItem);
+                    self.tableItems(self.tmpTableItems());
                 });
                 self.countOfContacts(data.countOfContacts);
             });

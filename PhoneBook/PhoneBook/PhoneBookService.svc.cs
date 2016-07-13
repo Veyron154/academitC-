@@ -41,6 +41,7 @@ namespace PhoneBook
                     Surname = contact.Surname,
                     Phone = contact.Phone
                 });
+
                 database.SaveChanges();
                 return new BaseResponseDto
                 {

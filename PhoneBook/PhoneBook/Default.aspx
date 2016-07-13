@@ -60,11 +60,12 @@
         <label data-bind="text: countOfContactsText" class="count-of-contacts"></label>
         <nav>
             <ul class="pager">
-                <li data-bind="css: { 'disabled': numberOfPage() === 1 }">
-                    <a data-bind="click: getPrevPage" class="btn btn-default">Предыдущая</a>
+                <li>
+                    <a data-bind="click: getPrevPage, css: { 'disabled': numberOfPage() === 1 }" class="btn btn-default">Предыдущая</a>
                 </li>
-                <li data-bind="css: { 'disabled': numberOfPage() === Math.ceil(countOfContacts() / sizeOfPage())}">
-                    <a data-bind="click: getNextPage" class="btn btn-default">Следующая</a>
+                <li>
+                    <a data-bind="click: getNextPage, css: {'disabled': numberOfPage() === Math.ceil(countOfContacts() /
+                        sizeOfPage())}" class="btn btn-default">Следующая</a>
                 </li>
             </ul>
         </nav>
