@@ -43,14 +43,14 @@
                     sortCommand: self.sortCommand(),
                     isSortedDesc: self.isSortedDesc()
                 }
-            }).done(function (data) {
+            }).done(function(data) {
                 var tmpList = _.map(data.contactsList, function(contact) {
                     return new TableItemViewModel(contact.name, contact.surname, contact.phone, contact.id);
                 });
                 self.tableItems(tmpList);
                 self.countOfContacts(data.countOfContacts);
             });
-        }
+        };
 
         self.addTableItem = function() {
             self.needValidate(true);
@@ -117,13 +117,13 @@
             self.refreshTable();
         };
 
-        self.cancelFilter = function () {
+        self.cancelFilter = function() {
             self.filterText("");
             self.numberOfPage(1);
             self.refreshTable();
-        }
+        };
 
-        self.sortList = function (sortCommand) {
+        self.sortList = function(sortCommand) {
             if (self.sortCommand() === sortCommand) {
                 self.isSortedDesc(!self.isSortedDesc());
             } else {
@@ -132,17 +132,17 @@
             self.sortCommand(sortCommand);
             self.numberOfPage(1);
             self.refreshTable();
-        }
+        };
 
-        self.getNextPage = function () {
+        self.getNextPage = function() {
             self.numberOfPage(self.numberOfPage() + 1);
             self.refreshTable();
-        }
+        };
 
-        self.getPrevPage = function () {
+        self.getPrevPage = function() {
             self.numberOfPage(self.numberOfPage() - 1);
             self.refreshTable();
-        }
+        };
     }
 
     function TableItemViewModel(name, surname, phone, id) {
