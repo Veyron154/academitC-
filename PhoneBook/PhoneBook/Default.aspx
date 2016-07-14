@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Телефонная книга" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="PhoneBook._Default" %>
 
 <asp:Content ContentPlaceHolderID="MainContent" runat="server">
-    <div class="main container">
+    <div class="main container" id="main-container">
         <div class="form-inline">
             <div class="form-group">
                <label>

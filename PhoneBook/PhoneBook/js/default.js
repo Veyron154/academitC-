@@ -1,7 +1,7 @@
 ﻿(function($, ko, _) {
     $(document).ready(function() {
         var vm = new PhoneBookViewModel();
-        ko.applyBindings(vm);
+        ko.applyBindings(vm, document.getElementById("main-container"));
         vm.refreshTable();
     });
 
@@ -81,16 +81,18 @@
         };
 
         self.removeTableItem = function(item) {
-            var rows = _.filter(self.tableItems(),
-                function(item) {
-                    return item.isChecked() === true;
-                });
+            var rows = _.filter(self.tableItems(), function(item) {
+                return item.isChecked() === true;
+            });
+
             var messageString = "следующие контакты? <br />";
             messageString += _.pluck(rows, "itemSurname").join("<br />");
+
             if (rows.length === 0) {
                 rows.push(item);
                 messageString = "контакт: " + item.itemSurname + " ?";
             }
+
             $.confirm({
                 title: "Подтверждение удаления",
                 content: "Вы действительно хотите удалить " + messageString,

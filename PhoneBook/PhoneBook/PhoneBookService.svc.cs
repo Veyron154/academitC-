@@ -88,6 +88,7 @@ namespace PhoneBook
         public Stream GetExcel(string filter, SortCommand sortCommand, bool isSortedDesc)
         {
             List<ContactDto> table;
+
             using (var database = new PhoneBookDatabaseEntities())
             {
                 table = GetFullData(filter, database.Contact, sortCommand, isSortedDesc).ToList();
