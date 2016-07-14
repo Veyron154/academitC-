@@ -18,9 +18,6 @@
         self.sizeOfPage = ko.observable(5);
         self.numberOfPage = ko.observable(1);
         self.sortCommand = ko.observable(SortCommand.Surname);
-        self.isSortedByName = ko.observable(false);
-        self.isSortedBySurname = ko.observable(true);
-        self.isSortedByPhone = ko.observable(false);
         self.isSortedDesc = ko.observable(false);
 
         self.urlForExcel = ko.computed(function() {
@@ -124,44 +121,13 @@
             self.refreshTable();
         }
 
-        self.sortByName = function() {
-            self.sortCommand(SortCommand.Name);
-            if (self.isSortedByName()) {
+        self.sortList = function (sortCommand) {
+            if (self.sortCommand() === sortCommand) {
                 self.isSortedDesc(!self.isSortedDesc());
             } else {
                 self.isSortedDesc(false);
             }
-            self.isSortedByName(true);
-            self.isSortedBySurname(false);
-            self.isSortedByPhone(false);
-            self.numberOfPage(1);
-            self.refreshTable();
-        }
-
-        self.sortBySurname = function () {
-            self.sortCommand(SortCommand.Surname);
-            if (self.isSortedBySurname()) {
-                self.isSortedDesc(!self.isSortedDesc());
-            } else {
-                self.isSortedDesc(false);
-            }
-            self.isSortedBySurname(true);
-            self.isSortedByName(false);
-            self.isSortedByPhone(false);
-            self.numberOfPage(1);
-            self.refreshTable();
-        }
-
-        self.sortByPhone = function () {
-            self.sortCommand(SortCommand.Phone);
-            if (self.isSortedByPhone()) {
-                self.isSortedDesc(!self.isSortedDesc());
-            } else {
-                self.isSortedDesc(false);
-            }
-            self.isSortedByPhone(true);
-            self.isSortedByName(false);
-            self.isSortedBySurname(false);
+            self.sortCommand(sortCommand);
             self.numberOfPage(1);
             self.refreshTable();
         }

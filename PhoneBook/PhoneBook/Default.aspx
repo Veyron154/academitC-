@@ -19,23 +19,23 @@
                     <th class="first-column"><input class="top-checkbox" type="checkbox"
                                                     data-bind="checked: isTopChecked" title="Выделить все"/></th>
                     <th class="second-column">№</th>
-                    <th class="third-column cursor-pointer" data-bind="click: sortBySurname" 
+                    <th class="third-column cursor-pointer" data-bind="click: sortList.bind($data, 1)" 
                         title="Нажмите, чтобы отсортировать таблицу по этому полю">Фамилия
-                        <span data-bind="css: {'glyphicon-chevron-down': isSortedBySurname() && !isSortedDesc(),
-                            'glyphicon-chevron-up': isSortedBySurname() && isSortedDesc(),
-                            'glyphicon': isSortedBySurname()}"></span>
+                        <span data-bind="css: {'glyphicon-chevron-down': sortCommand() === 1 && !isSortedDesc(),
+                            'glyphicon-chevron-up': sortCommand() === 1 && isSortedDesc(),
+                            'glyphicon': sortCommand() === 1}"></span>
                     </th>
-                    <th class="fourth-column cursor-pointer" data-bind="click: sortByName" 
+                    <th class="fourth-column cursor-pointer" data-bind="click: sortList.bind($data, 0)" 
                         title="Нажмите, чтобы отсортировать таблицу по этому полю">Имя
-                        <span data-bind="css: {'glyphicon-chevron-down': isSortedByName() && !isSortedDesc(),
-                            'glyphicon-chevron-up': isSortedByName() && isSortedDesc(),
-                            'glyphicon': isSortedByName()}"></span>
+                        <span data-bind="css: {'glyphicon-chevron-down': sortCommand() === 0 && !isSortedDesc(),
+                            'glyphicon-chevron-up': sortCommand() === 0 && isSortedDesc(),
+                            'glyphicon': sortCommand() === 0}"></span>
                     </th>
-                    <th class="fifth-column cursor-pointer" data-bind="click: sortByPhone" 
+                    <th class="fifth-column cursor-pointer" data-bind="click: sortList.bind($data, 2)" 
                         title="Нажмите, чтобы отсортировать таблицу по этому полю">Номер телефона
-                        <span data-bind="css: {'glyphicon-chevron-down': isSortedByPhone() && !isSortedDesc(),
-                            'glyphicon-chevron-up': isSortedByPhone() && isSortedDesc(),
-                            'glyphicon': isSortedByPhone()}"></span>
+                        <span data-bind="css: {'glyphicon-chevron-down': sortCommand() === 2 && !isSortedDesc(),
+                            'glyphicon-chevron-up': sortCommand() === 2 && isSortedDesc(),
+                            'glyphicon': sortCommand() === 2}"></span>
                     </th>
                     <th class="sixth-column">Удалить</th>
                 </tr>
