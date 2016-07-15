@@ -1,4 +1,10 @@
-﻿(function($, ko, _) {
+﻿(function ($, ko, _) {
+    window.SortCommand = {
+        Name: 0,
+        Surname: 1,
+        Phone: 2
+    };
+
     $(document).ready(function() {
         var vm = new PhoneBookViewModel();
         ko.applyBindings(vm, document.getElementById("main-container"));
@@ -26,6 +32,9 @@
         });
         self.countOfContactsText = ko.computed(function() {
             return "Число контактов: " + self.countOfContacts();
+        });
+        self.isDasabledNextPageButton = ko.computed(function () {
+            return self.numberOfPage() === Math.ceil(self.countOfContacts() / self.sizeOfPage())
         });
 
         self.isTopChecked.subscribe(function(newValue) {
@@ -119,8 +128,7 @@
 
         self.cancelFilter = function() {
             self.filterText("");
-            self.numberOfPage(1);
-            self.refreshTable();
+            self.executeFilter();
         };
 
         self.sortList = function(sortCommand) {
@@ -173,11 +181,5 @@
             content: message,
             confirmButton: "OK"
         });
-    }
-
-    window.SortCommand = {
-        Name: 0,
-        Surname: 1,
-        Phone: 2
     }
 })($, ko, _)
