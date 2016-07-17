@@ -106,13 +106,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PhoneBookDatabase.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="PhoneBookDatabase_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>PhoneBookDatabase.mdf</DependentUpon>
-    </Content>
     <Content Include="PhoneBookModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>PhoneBookModel.edmx</DependentUpon>
