@@ -115,6 +115,7 @@
                         ids: array
                     }).done(function () {
                         self.numberOfPage(1);
+                        self.isTopChecked(false);
                         self.refreshTable();
                     });
                 }
