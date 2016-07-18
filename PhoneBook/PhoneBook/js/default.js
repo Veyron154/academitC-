@@ -41,6 +41,7 @@
             _.each(self.tableItems(), function(item) {
                 item.isChecked(newValue);
             });
+
         });
 
         self.refreshTable = function() {
