@@ -116,17 +116,8 @@ namespace PhoneBook
 
                 var range = worksheet.Range("A1", "C" + (i - 1));
 
-                if (i > 2)
-                {
-                    var rngNumbers = range.Range("C2", "C" + (i - 1));
-                    rngNumbers.Style.NumberFormat.Format = "@";
-                }
+                worksheet.Range("C2", "C" + (i - 1)).DataType = XLCellValues.Text;
 
-                var rngHeader = range.Range("A1", "C1");
-                rngHeader.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                rngHeader.Style.Font.Bold = true;
-                rngHeader.Style.Fill.BackgroundColor = XLColor.CornflowerBlue;
-                
                 range.CreateTable();
 
                 var memoryStream = new MemoryStream();
