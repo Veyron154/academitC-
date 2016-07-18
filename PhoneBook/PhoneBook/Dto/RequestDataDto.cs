@@ -1,7 +1,7 @@
 ﻿
 using System.Runtime.Serialization;
 
-namespace Dto
+namespace PhoneBook.Dto
 {
     [DataContract]
     public class RequestDataDto

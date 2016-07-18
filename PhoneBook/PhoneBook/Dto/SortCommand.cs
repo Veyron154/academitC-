@@ -1,5 +1,5 @@
 ﻿
-namespace Dto
+namespace PhoneBook.Dto
 {
     public enum SortCommand
     {

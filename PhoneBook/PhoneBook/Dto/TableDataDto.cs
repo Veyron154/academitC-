@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Dto
+namespace PhoneBook.Dto
 {
     [DataContract]
     public class TableDataDto

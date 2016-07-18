@@ -2,7 +2,7 @@
 using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using Dto;
+using PhoneBook.Dto;
 
 namespace PhoneBook
 {
