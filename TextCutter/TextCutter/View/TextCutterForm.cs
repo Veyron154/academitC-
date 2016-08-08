@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using TextCutter.Model;
 
-namespace TextCutter.Viev
+namespace TextCutter.View
 {
     public partial class TextCutterForm : Form
     {
@@ -13,9 +13,10 @@ namespace TextCutter.Viev
 
         private void inputFileButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
 
-            if(openFileDialog.ShowDialog() == DialogResult.OK)
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 inputFileTextBox.Text = openFileDialog.FileName;
             }
@@ -23,43 +24,47 @@ namespace TextCutter.Viev
 
         private void outputFileButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
 
-            if(openFileDialog.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                outputFileTextBox.Text = openFileDialog.FileName;
+                outputFileTextBox.Text = saveFileDialog.FileName;
             }
         }
 
         private void executeButton_Click(object sender, EventArgs e)
         {
-            if(inputFileTextBox.Text == "")
+            if (string.IsNullOrWhiteSpace(inputFileTextBox.Text))
             {
-                MessageBox.Show("Выберите входной файл", "Ошибка заполнения", MessageBoxButtons.OK);
+                MessageBox.Show("Выберите входной файл", "Ошибка заполнения", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (outputFileTextBox.Text == "")
+            if (string.IsNullOrWhiteSpace(outputFileTextBox.Text))
             {
-                MessageBox.Show("Выберите выходной файл", "Ошибка заполнения", MessageBoxButtons.OK);
-                return;
-            }
-            if(wordSizeTextBox.Text == "0")
-            {
-                MessageBox.Show("Укажите минимальную длину слов", "Ошибка заполнения", MessageBoxButtons.OK);
+                MessageBox.Show("Выберите выходной файл", "Ошибка заполнения", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            ITextCutter textCutter = new FileTextCutter(inputFileTextBox.Text, outputFileTextBox.Text, int.Parse(wordSizeTextBox.Text), 
+            int minWordSize;
+            if (int.TryParse(wordSizeTextBox.Text, out minWordSize) && minWordSize <= 0)
+            {
+                MessageBox.Show("Укажите минимальную длину слов \n (положительное число)", "Ошибка заполнения", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var textCutter = new FileTextCutter(inputFileTextBox.Text, outputFileTextBox.Text, int.Parse(wordSizeTextBox.Text), 
                 punctuationMarksCheckBox.Checked);
-            TextCutterResult result = textCutter.Cut();
+            var result = textCutter.Cut();
 
-            if(result == TextCutterResult.Ok)
+            if (result == TextCutterResult.Ok)
             {
-                MessageBox.Show("Выполнено", "Выполнено", MessageBoxButtons.OK);
+                MessageBox.Show("Выполнено", "Выполнено", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             if (result == TextCutterResult.Error)
             {
-                MessageBox.Show("Произошла ошибка", "Ошибка", MessageBoxButtons.OK);
+                MessageBox.Show("Произошла ошибка", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

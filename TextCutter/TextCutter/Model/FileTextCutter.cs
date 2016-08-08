@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -7,45 +7,44 @@ namespace TextCutter.Model
 {
     class FileTextCutter : ITextCutter
     {
-        private string _inputFilePath;
-        private string _outputFilePath;
-        private int _minWordSize;
-        private bool _isRemovePunctuationMarks;
+        private readonly string _inputFilePath;
+        private readonly string _outputFilePath;
+        private readonly int _minWordSize;
+        private readonly bool _isRemovePunctuationMarks;
+        private static readonly char[] charsToTrim = { '-', ',', '.', '?', '!', ')', '(', ':' };
 
-        public FileTextCutter (string inputFilePath, string outputFilePath, int minWordSize, bool isRemovePunctuationMArks)
+        public FileTextCutter (string inputFilePath, string outputFilePath, int minWordSize, bool isRemovePunctuationMarks)
         {
             _inputFilePath = inputFilePath;
             _outputFilePath = outputFilePath;
             _minWordSize = minWordSize;
-            _isRemovePunctuationMarks = isRemovePunctuationMArks;
+            _isRemovePunctuationMarks = isRemovePunctuationMarks;
         }
 
         public TextCutterResult Cut()
         {
             try
             {
-                using (StreamReader streamReader = new StreamReader(_inputFilePath))
+                using (var streamReader = new StreamReader(_inputFilePath, Encoding.Default))
                 {
-                    string inputLine;
-                    using (StreamWriter streamWriner = new StreamWriter(_outputFilePath))
+                    using (var streamWriner = new StreamWriter(_outputFilePath))
                     {
+                        string inputLine;
                         while ((inputLine = streamReader.ReadLine()) != null)
                         {
                             if (_isRemovePunctuationMarks)
                             {
                                 inputLine = Regex.Replace(inputLine, "[-,.?!)(;:]", "");
                             }
-                            string[] inputWords = inputLine.Split(new char[] { ' ' });
+                            var inputWords = inputLine.Split(new[] { ' ' });
 
-                            StringBuilder stringBuilder = new StringBuilder();
-                            string tmpWord;
-                            char[] charsToTrim = { '-', ',', '.', '?', '!', ')', '(', ':' };
+                            var stringBuilder = new StringBuilder();
 
                             foreach (var word in inputWords)
                             {
-                                tmpWord = word.Trim(charsToTrim);
+                                var tmpWord = word.Trim(charsToTrim);
 
-                                if(tmpWord.Length >= _minWordSize)
+                                if (tmpWord.Length >= _minWordSize)
                                 {
                                     stringBuilder.Append(word)
                                         .Append(" ");
@@ -57,8 +56,9 @@ namespace TextCutter.Model
                 }
                 return TextCutterResult.Ok;
             }
-            catch
+            catch (IOException e)
             {
+                Console.WriteLine(e.ToString());
                 return TextCutterResult.Error;
             }
         }
