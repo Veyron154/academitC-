@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -21,7 +21,7 @@ namespace TextCutter.Model
             _isRemovePunctuationMarks = isRemovePunctuationMarks;
         }
 
-        public TextCutterResult Cut()
+        public void Cut()
         {
             try
             {
@@ -54,12 +54,10 @@ namespace TextCutter.Model
                         }
                     }
                 }
-                return TextCutterResult.Ok;
             }
-            catch (IOException e)
+            catch
             {
-                Console.WriteLine(e.ToString());
-                return TextCutterResult.Error;
+                throw;
             }
         }
     }

@@ -3,6 +3,6 @@ namespace TextCutter.Model
 {
     interface ITextCutter
     {
-        TextCutterResult Cut();
+        void Cut();
     }
 }

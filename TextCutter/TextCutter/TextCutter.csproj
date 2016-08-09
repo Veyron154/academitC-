@@ -56,7 +56,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\FileTextCutter.cs" />
-    <Compile Include="Model\TextCutterResult.cs" />
     <EmbeddedResource Include="View\TextCutterForm.resx">
       <DependentUpon>TextCutterForm.cs</DependentUpon>
     </EmbeddedResource>
