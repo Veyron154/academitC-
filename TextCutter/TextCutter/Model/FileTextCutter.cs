@@ -23,41 +23,34 @@ namespace TextCutter.Model
 
         public void Cut()
         {
-            try
+            using (var streamReader = new StreamReader(_inputFilePath, Encoding.Default))
             {
-                using (var streamReader = new StreamReader(_inputFilePath, Encoding.Default))
+                using (var streamWriner = new StreamWriter(_outputFilePath))
                 {
-                    using (var streamWriner = new StreamWriter(_outputFilePath))
+                    string inputLine;
+                    while ((inputLine = streamReader.ReadLine()) != null)
                     {
-                        string inputLine;
-                        while ((inputLine = streamReader.ReadLine()) != null)
+                        if (_isRemovePunctuationMarks)
                         {
-                            if (_isRemovePunctuationMarks)
-                            {
-                                inputLine = Regex.Replace(inputLine, "[-,.?!)(;:]", "");
-                            }
-                            var inputWords = inputLine.Split(new[] { ' ' });
-
-                            var stringBuilder = new StringBuilder();
-
-                            foreach (var word in inputWords)
-                            {
-                                var tmpWord = word.Trim(charsToTrim);
-
-                                if (tmpWord.Length >= _minWordSize)
-                                {
-                                    stringBuilder.Append(word)
-                                        .Append(" ");
-                                }
-                            }
-                            streamWriner.WriteLine(stringBuilder.ToString());
+                            inputLine = Regex.Replace(inputLine, "[-,.?!)(;:]", "");
                         }
+                        var inputWords = inputLine.Split(new[] { ' ' });
+
+                        var stringBuilder = new StringBuilder();
+
+                        foreach (var word in inputWords)
+                        {
+                            var tmpWord = word.Trim(charsToTrim);
+
+                            if (tmpWord.Length >= _minWordSize)
+                            {
+                                stringBuilder.Append(word)
+                                    .Append(" ");
+                            }
+                        }
+                        streamWriner.WriteLine(stringBuilder.ToString());
                     }
                 }
-            }
-            catch
-            {
-                throw;
             }
         }
     }
