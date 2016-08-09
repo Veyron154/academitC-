@@ -164,7 +164,7 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(87, 211);
+            this.okButton.Location = new System.Drawing.Point(104, 211);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 13;
@@ -176,7 +176,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(244, 246);
+            this.ClientSize = new System.Drawing.Size(284, 246);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.fiveThousandBillsTextBox);
             this.Controls.Add(this.thousandBillsTextBox);
@@ -191,6 +191,8 @@
             this.Controls.Add(this.fifyBillsLabel);
             this.Controls.Add(this.tenBillsLabel);
             this.Controls.Add(this.topLabel);
+            this.MaximumSize = new System.Drawing.Size(300, 285);
+            this.MinimumSize = new System.Drawing.Size(300, 285);
             this.Name = "PutCashForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Внесение наличных";

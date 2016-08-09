@@ -65,7 +65,9 @@
             // 
             // cashComboBox
             // 
+            this.cashComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cashComboBox.FormattingEnabled = true;
+            this.cashComboBox.IntegralHeight = false;
             this.cashComboBox.Items.AddRange(new object[] {
             "10 руб.",
             "50 руб.",
@@ -98,6 +100,8 @@
             this.Controls.Add(this.cashLabel);
             this.Controls.Add(this.sumTextBox);
             this.Controls.Add(this.sumLabel);
+            this.MaximumSize = new System.Drawing.Size(425, 150);
+            this.MinimumSize = new System.Drawing.Size(425, 150);
             this.Name = "GetCashForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Получение наличных";

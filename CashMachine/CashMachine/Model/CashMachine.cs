@@ -1,25 +1,22 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace CashMachine.Model
 {
     public class CashMachine
     {
-        public int CountOfTenBills { get; set; }
-        public int CountOfFiftyBills { get; set; }
-        public int CountOfHundredBills { get; set; }
-        public int CountOfFiveHundredBills { get; set; }
-        public int CountOfThousandBills { get; set; }
-        public int CountOfFiveThousandBills { get; set; }
+        public List<Rating> ListOfRatings { get; private set; }
         public int TotalCountOfMoney { get; private set; }
         public int MaxCountOfBills { get; private set; }
 
         public CashMachine()
         {
-            CountOfTenBills = 50;
-            CountOfFiftyBills = 50;
-            CountOfHundredBills = 50;
-            CountOfFiveHundredBills = 50;
-            CountOfThousandBills = 50;
-            CountOfFiveThousandBills = 50;
+            ListOfRatings = new List<Rating>();
+            ListOfRatings.Add(new Rating(10, "10 руб.", 50));
+            ListOfRatings.Add(new Rating(50, "50 руб.", 50));
+            ListOfRatings.Add(new Rating(100, "100 руб.", 50));
+            ListOfRatings.Add(new Rating(500, "500 руб.", 50));
+            ListOfRatings.Add(new Rating(1000, "1000 руб.", 50));
+            ListOfRatings.Add(new Rating(5000, "5000 руб.", 50));
 
             MaxCountOfBills = 100;
 
@@ -29,12 +26,10 @@ namespace CashMachine.Model
         public void CalculateMoney()
         {
             var sum = 0;
-            sum += CountOfTenBills * 10;
-            sum += CountOfFiftyBills * 50;
-            sum += CountOfHundredBills * 100;
-            sum += CountOfFiveHundredBills * 500;
-            sum += CountOfThousandBills * 1000;
-            sum += CountOfFiveThousandBills * 5000;
+            foreach (var rating in ListOfRatings)
+            {
+                sum += rating.Value * rating.Count;
+            }
             TotalCountOfMoney = sum;
         }
     }

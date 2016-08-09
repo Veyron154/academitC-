@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Windows.Forms;
 
 namespace CashMachine.View
@@ -39,10 +40,12 @@ namespace CashMachine.View
 
         private void infoButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show($"Сейчас в банкомате:\n10 руб. - {_cashMachine.CountOfTenBills} шт.\n" + 
-                $"50 руб. - {_cashMachine.CountOfFiftyBills} шт.\n100 руб. - {_cashMachine.CountOfHundredBills} шт.\n" + 
-                $"500 руб. - {_cashMachine.CountOfFiveHundredBills} шт.\n1000 руб. - {_cashMachine.CountOfThousandBills} шт.\n" + 
-                $"5000 руб. - {_cashMachine.CountOfFiveThousandBills} шт.", "Информация", MessageBoxButtons.OK, 
+            var stringBuilder = new StringBuilder("Сейчас в банкомате:");
+            foreach (var rating in _cashMachine.ListOfRatings)
+            {
+                stringBuilder.Append($"\n{rating.Name} - {rating.Count} шт.");
+            }
+            MessageBox.Show(stringBuilder.ToString(), "Информация", MessageBoxButtons.OK, 
                 MessageBoxIcon.Information);
         }
     }
