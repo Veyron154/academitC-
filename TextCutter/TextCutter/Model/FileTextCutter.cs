@@ -11,7 +11,7 @@ namespace TextCutter.Model
         private readonly string _outputFilePath;
         private readonly int _minWordSize;
         private readonly bool _isRemovePunctuationMarks;
-        private static readonly char[] charsToTrim = { '-', ',', '.', '?', '!', ')', '(', ':' };
+        private static readonly char[] CharsToTrim = { '-', ',', '.', '?', '!', ')', '(', ':' };
 
         public FileTextCutter (string inputFilePath, string outputFilePath, int minWordSize, bool isRemovePunctuationMarks)
         {
@@ -34,13 +34,13 @@ namespace TextCutter.Model
                         {
                             inputLine = Regex.Replace(inputLine, "[-,.?!)(;:]", "");
                         }
-                        var inputWords = inputLine.Split(new[] { ' ' });
+                        var inputWords = inputLine.Split(' ');
 
                         var stringBuilder = new StringBuilder();
 
                         foreach (var word in inputWords)
                         {
-                            var tmpWord = word.Trim(charsToTrim);
+                            var tmpWord = word.Trim(CharsToTrim);
 
                             if (tmpWord.Length >= _minWordSize)
                             {

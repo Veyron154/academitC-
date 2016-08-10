@@ -142,6 +142,7 @@
             this.Controls.Add(this.getCashLabel);
             this.Controls.Add(this.sumTextBox);
             this.Controls.Add(this.sumLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximumSize = new System.Drawing.Size(380, 200);
             this.MinimumSize = new System.Drawing.Size(380, 200);
             this.Name = "CashMachineForm";

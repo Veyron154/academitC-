@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using CashMachine.Model.Exceptions;
 
 namespace CashMachine.View
 {
@@ -42,60 +43,30 @@ namespace CashMachine.View
                 ++i;
             }
 
-            MaximumSize = new Size(300, 130 + (25 * i));
-            MinimumSize = new Size(300, 130 + (25 * i));
+            Size = new Size(300, 130 + (25 * i));
         }
         
         private void okButton_Click(object sender, EventArgs e)
         {
-            var listOfCountsOfBills = _cashMachine.ListOfBills.Select(rating => new int()).ToList();
-
-            for (var i = 0; i < listOfCountsOfBills.Count; ++i)
+            var listOfTextBoxesValues = _listOfTextBoxes.Select(i => i.Text).ToList();
+            try
             {
-                listOfCountsOfBills[i] = CheckToCorrectValue(_listOfTextBoxes[i].Text, _cashMachine.ListOfBills[i].Name);
-                if (listOfCountsOfBills[i] == -1)
-                {
-                    return;
-                }
+                var sum = _cashMachine.PutCash(listOfTextBoxesValues);
+                MessageBox.Show($"Счёт пополнен на {sum} рублей", "Выполнено", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                Hide();
             }
-
-            for (var i = 0; i < listOfCountsOfBills.Count; ++i)
+            catch (InvalidValueOfBillException ex)
             {
-                var rating = _cashMachine.ListOfBills[i];
-                if (!CheckToFullness(listOfCountsOfBills[i], rating.Count, rating.Name))
-                {
-                    return;
-                }
+                MessageBox.Show($"Операция не выполнена\nВведите корректное количество {ex.BillName} купюр", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            var sum = 0;
-            for (var i = 0; i < listOfCountsOfBills.Count; ++i)
+            catch (FullnessCashMachineException ex)
             {
-                var rating = _cashMachine.ListOfBills[i];
-                rating.Count += listOfCountsOfBills[i];
-                sum += listOfCountsOfBills[i] * rating.Value;
-            }
-
-            MessageBox.Show($"Счёт пополнен на {sum} рублей", "Выполнено", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            Hide();
-        }
-
-        private static int CheckToCorrectValue(string textBoxText, string cashValue)
-        {
-            int countOfBills;
-            if (int.TryParse(textBoxText, out countOfBills) && countOfBills >= 0) return countOfBills;
-            MessageBox.Show($"Операция не выполнена \n Введите корректное количество {cashValue} купюр", "Ошибка",
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return -1;
-        }
-
-        private bool CheckToFullness(int countOfBills, int curentCountOfBills, string cash)
-        {
-            if (countOfBills + curentCountOfBills <= _cashMachine.MaxCountOfBills) return true;
-            MessageBox.Show($"Операция не выполнена \n Банкомат не может принять такое количество {cash} купюр", "Ошибка",
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return false;
+                MessageBox.Show($"Операция не выполнена\nБанкомат не может принять такое количество {ex.BillName} купюр", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } 
         }
     }
 }

@@ -94,6 +94,7 @@
             this.Controls.Add(this.cashLabel);
             this.Controls.Add(this.sumTextBox);
             this.Controls.Add(this.sumLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximumSize = new System.Drawing.Size(425, 150);
             this.MinimumSize = new System.Drawing.Size(425, 150);
             this.Name = "GetCashForm";

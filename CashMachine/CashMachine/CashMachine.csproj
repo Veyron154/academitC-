@@ -48,6 +48,11 @@
   <ItemGroup>
     <Compile Include="Model\CashMachine.cs" />
     <Compile Include="Model\Bill.cs" />
+    <Compile Include="Model\Exceptions\ExceedingSumException.cs" />
+    <Compile Include="Model\Exceptions\FullnessCashMachineException.cs" />
+    <Compile Include="Model\Exceptions\ImpossibleCashCombinationException.cs" />
+    <Compile Include="Model\Exceptions\InvalidValueOfBillException.cs" />
+    <Compile Include="Model\Exceptions\InvalidValueOfSumException.cs" />
     <Compile Include="View\CashMachineForm.cs">
       <SubType>Form</SubType>
     </Compile>

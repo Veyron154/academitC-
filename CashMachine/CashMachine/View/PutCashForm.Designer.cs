@@ -61,6 +61,7 @@
             this.ClientSize = new System.Drawing.Size(284, 86);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.topLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "PutCashForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Внесение наличных";
