@@ -15,6 +15,11 @@ namespace CashMachine.View
             InitializeComponent();
             _cashMachine = cashMachine;
             _sum = 0;
+
+            foreach (var bill in _cashMachine.ListOfBills)
+            {
+                cashComboBox.Items.Add(bill.Name);
+            }
             cashComboBox.SelectedIndex = 0;
         }
 

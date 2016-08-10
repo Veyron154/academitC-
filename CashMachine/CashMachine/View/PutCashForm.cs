@@ -45,15 +45,14 @@ namespace CashMachine.View
             MaximumSize = new Size(300, 130 + (25 * i));
             MinimumSize = new Size(300, 130 + (25 * i));
         }
-
+        
         private void okButton_Click(object sender, EventArgs e)
         {
             var listOfCountsOfBills = _cashMachine.ListOfBills.Select(rating => new int()).ToList();
 
             for (var i = 0; i < listOfCountsOfBills.Count; ++i)
             {
-                listOfCountsOfBills[i] = CheckToCorrectValue(_listOfTextBoxes[i].Text, listOfCountsOfBills[i], 
-                    _cashMachine.ListOfBills[i].Name);
+                listOfCountsOfBills[i] = CheckToCorrectValue(_listOfTextBoxes[i].Text, _cashMachine.ListOfBills[i].Name);
                 if (listOfCountsOfBills[i] == -1)
                 {
                     return;
@@ -82,26 +81,21 @@ namespace CashMachine.View
             Hide();
         }
 
-        private int CheckToCorrectValue(string textBoxText, int countOfBills, string cashValue)
+        private static int CheckToCorrectValue(string textBoxText, string cashValue)
         {
-            if (!int.TryParse(textBoxText, out countOfBills) || countOfBills < 0)
-            {
-                MessageBox.Show($"Операция не выполнена \n Введите корректное количество {cashValue} купюр", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-            return countOfBills;
+            int countOfBills;
+            if (int.TryParse(textBoxText, out countOfBills) && countOfBills >= 0) return countOfBills;
+            MessageBox.Show($"Операция не выполнена \n Введите корректное количество {cashValue} купюр", "Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return -1;
         }
 
         private bool CheckToFullness(int countOfBills, int curentCountOfBills, string cash)
         {
-            if (countOfBills + curentCountOfBills > _cashMachine.MaxCountOfBills)
-            {
-                MessageBox.Show($"Операция не выполнена \n Банкомат не может принять такое количество {cash} купюр", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            return true;
+            if (countOfBills + curentCountOfBills <= _cashMachine.MaxCountOfBills) return true;
+            MessageBox.Show($"Операция не выполнена \n Банкомат не может принять такое количество {cash} купюр", "Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
         }
     }
 }

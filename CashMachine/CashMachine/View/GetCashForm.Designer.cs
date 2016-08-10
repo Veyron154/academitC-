@@ -68,13 +68,6 @@
             this.cashComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cashComboBox.FormattingEnabled = true;
             this.cashComboBox.IntegralHeight = false;
-            this.cashComboBox.Items.AddRange(new object[] {
-            "10 руб.",
-            "50 руб.",
-            "100 руб.",
-            "500 руб.",
-            "1000 руб.",
-            "5000 руб."});
             this.cashComboBox.Location = new System.Drawing.Point(312, 44);
             this.cashComboBox.Name = "cashComboBox";
             this.cashComboBox.Size = new System.Drawing.Size(80, 21);
