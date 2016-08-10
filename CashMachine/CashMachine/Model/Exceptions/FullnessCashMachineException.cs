@@ -1,9 +1,7 @@
 ﻿
-using System;
-
 namespace CashMachine.Model.Exceptions
 {
-    internal class FullnessCashMachineException : Exception
+    internal class FullnessCashMachineException : CashMachineException
     {
         public string BillName { get; private set; }
 

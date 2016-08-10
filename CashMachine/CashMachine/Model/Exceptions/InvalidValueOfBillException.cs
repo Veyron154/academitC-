@@ -1,8 +1,7 @@
-﻿using System;
-
+﻿
 namespace CashMachine.Model.Exceptions
 {
-    internal class InvalidValueOfBillException : Exception
+    internal class InvalidValueOfBillException : CashMachineException
     {
         public string BillName { get; private set; }
 

@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Model\CashMachine.cs" />
     <Compile Include="Model\Bill.cs" />
+    <Compile Include="Model\Exceptions\CashMachineException.cs" />
     <Compile Include="Model\Exceptions\ExceedingSumException.cs" />
     <Compile Include="Model\Exceptions\FullnessCashMachineException.cs" />
     <Compile Include="Model\Exceptions\ImpossibleCashCombinationException.cs" />

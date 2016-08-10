@@ -193,6 +193,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 261);
             this.Controls.Add(this.tableLayoutPanel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MinimumSize = new System.Drawing.Size(700, 300);
             this.Name = "TextCutterForm";
             this.Padding = new System.Windows.Forms.Padding(10);

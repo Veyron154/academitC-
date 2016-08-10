@@ -23,7 +23,6 @@ namespace CashMachine.View
             {
                 return;
             }
-            _cashMachine.CalculateMoney();
             sumTextBox.Text = _cashMachine.TotalCountOfMoney.ToString();
         }
 
@@ -34,7 +33,6 @@ namespace CashMachine.View
             {
                 return;
             }
-            _cashMachine.CalculateMoney();
             sumTextBox.Text = _cashMachine.TotalCountOfMoney.ToString();
         }
 

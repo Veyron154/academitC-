@@ -6,11 +6,19 @@ namespace CashMachine.Model
 {
     public class CashMachine
     {
-        public List<Bill> ListOfBills { get; }
-        public int TotalCountOfMoney { get; private set; }
-        public int MaxCountOfBills { get; }
         private int _sum;
 
+        public int TotalCountOfMoney
+        {
+            get
+            {
+                return ListOfBills.Sum(rating => rating.Value*rating.Count);
+            }
+        }
+
+        public List<Bill> ListOfBills { get; }
+        public int MaxCountOfBills { get; }
+       
         public CashMachine()
         {
             const string currency = "руб.";
@@ -26,23 +34,13 @@ namespace CashMachine.Model
             };
 
             MaxCountOfBills = 100;
-
-            CalculateMoney();
         }
-
-        public void CalculateMoney()
+        
+        public int PutCash(List<int> listOfTextBoxesValues)
         {
-            var sum = ListOfBills.Sum(rating => rating.Value*rating.Count);
-            TotalCountOfMoney = sum;
-        }
-
-        public int PutCash(List<string> listOfTextBoxesText)
-        {
-            var listOfTextBoxesValues = new List<int>();
-            for (var i = 0; i < listOfTextBoxesText.Count; ++i)
+            for (var i = 0; i < listOfTextBoxesValues.Count; ++i)
             {
-                listOfTextBoxesValues.Add(CheckToCorrectValue(listOfTextBoxesText[i]));
-                if (listOfTextBoxesValues[i] == -1)
+                if (listOfTextBoxesValues[i] < 0)
                 {
                     throw new InvalidValueOfBillException(ListOfBills[i].Name);
                 }
@@ -67,10 +65,10 @@ namespace CashMachine.Model
             return sum;
         }
 
-        public List<int> GetCash(string textBoxText, int index)
+        public List<int> GetCash(string textBoxText, int index, int sum)
         {
-            _sum = 0;
-            if (!int.TryParse(textBoxText, out _sum) || _sum <= 0 || _sum % 10 != 0)
+            _sum = sum;
+            if (_sum <= 0 || _sum % 10 != 0)
             {
                 throw  new InvalidValueOfSumException();
             }
@@ -115,20 +113,6 @@ namespace CashMachine.Model
             }
             _sum -= requestedCountOfBills * cash;
             return requestedCountOfBills;
-        }
-
-        private static int CheckToCorrectValue(string textBoxText)
-        {
-            int countOfBills;
-            if (textBoxText == "")
-            {
-                return 0;
-            }
-            if (!int.TryParse(textBoxText, out countOfBills) || countOfBills < 0)
-            {
-                return -1;
-            }
-            return countOfBills;
         }
 
         private bool CheckToFullness(int countOfBills, int curentCountOfBills)

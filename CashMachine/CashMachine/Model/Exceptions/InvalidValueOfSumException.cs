@@ -1,9 +1,7 @@
 ﻿
-using System;
-
 namespace CashMachine.Model.Exceptions
 {
-    internal class InvalidValueOfSumException : Exception
+    internal class InvalidValueOfSumException : CashMachineException
     {
     }
 }

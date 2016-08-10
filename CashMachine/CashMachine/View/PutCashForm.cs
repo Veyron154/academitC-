@@ -48,9 +48,11 @@ namespace CashMachine.View
         
         private void okButton_Click(object sender, EventArgs e)
         {
-            var listOfTextBoxesValues = _listOfTextBoxes.Select(i => i.Text).ToList();
             try
             {
+                var listOfTextBoxesValues = _listOfTextBoxes.Select((t, i) => 
+                CheckToCorrectValue(t.Text, _cashMachine.ListOfBills[i].Name)).ToList();
+
                 var sum = _cashMachine.PutCash(listOfTextBoxesValues);
                 MessageBox.Show($"Счёт пополнен на {sum} рублей", "Выполнено", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -67,6 +69,17 @@ namespace CashMachine.View
                 MessageBox.Show($"Операция не выполнена\nБанкомат не может принять такое количество {ex.BillName} купюр", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             } 
+        }
+
+        private static int CheckToCorrectValue(string textBoxText, string name)
+        {
+            int countOfBills;
+            if (textBoxText == "")
+            {
+                return 0;
+            }
+            if (int.TryParse(textBoxText, out countOfBills)) return countOfBills;
+            throw new InvalidValueOfBillException(name);
         }
     }
 }

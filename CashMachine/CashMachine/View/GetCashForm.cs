@@ -31,7 +31,13 @@ namespace CashMachine.View
 
             try
             {
-                var listOfCountsOfBills = _cashMachine.GetCash(sumTextBox.Text, cashComboBox.SelectedIndex);
+                int sum;
+                if (!int.TryParse(sumTextBox.Text, out sum))
+                {
+                    throw new InvalidValueOfSumException();
+                }
+
+                var listOfCountsOfBills = _cashMachine.GetCash(sumTextBox.Text, cashComboBox.SelectedIndex, sum);
 
                 var stringBuilder = new StringBuilder("Выдано:");
                 for (var i = 0; i < listOfCountsOfBills.Count; ++i)
