@@ -1,16 +1,16 @@
 ﻿
 namespace CashMachine.Model
 {
-    public class Rating
+    public class Bill
     {
         public int Value { get; set; }
         public string Name { get; set; }
         public int Count { get; set; }
 
-        public Rating(int value, string name, int count)
+        public Bill(int value, string currency, int count)
         {
             Value = value;
-            Name = name;
+            Name = $"{value} {currency}";
             Count = count;
         }
     }

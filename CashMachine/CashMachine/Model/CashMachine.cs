@@ -1,22 +1,27 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace CashMachine.Model
 {
     public class CashMachine
     {
-        public List<Rating> ListOfRatings { get; private set; }
+        public List<Bill> ListOfBills { get; }
         public int TotalCountOfMoney { get; private set; }
         public int MaxCountOfBills { get; private set; }
 
         public CashMachine()
         {
-            ListOfRatings = new List<Rating>();
-            ListOfRatings.Add(new Rating(10, "10 руб.", 50));
-            ListOfRatings.Add(new Rating(50, "50 руб.", 50));
-            ListOfRatings.Add(new Rating(100, "100 руб.", 50));
-            ListOfRatings.Add(new Rating(500, "500 руб.", 50));
-            ListOfRatings.Add(new Rating(1000, "1000 руб.", 50));
-            ListOfRatings.Add(new Rating(5000, "5000 руб.", 50));
+            const string currency = "руб.";
+            const int defaultCount = 50;
+            ListOfBills = new List<Bill>
+            {
+                new Bill(10, currency, defaultCount),
+                new Bill(50, currency, defaultCount),
+                new Bill(100, currency, defaultCount),
+                new Bill(500, currency, defaultCount),
+                new Bill(1000, currency, defaultCount),
+                new Bill(5000, currency, defaultCount)
+            };
 
             MaxCountOfBills = 100;
 
@@ -25,11 +30,7 @@ namespace CashMachine.Model
 
         public void CalculateMoney()
         {
-            var sum = 0;
-            foreach (var rating in ListOfRatings)
-            {
-                sum += rating.Value * rating.Count;
-            }
+            var sum = ListOfBills.Sum(rating => rating.Value*rating.Count);
             TotalCountOfMoney = sum;
         }
     }

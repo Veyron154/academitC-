@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -33,17 +33,13 @@ namespace CashMachine.View
                 return;
             }
 
-            List<int> listOfCountsOfBills = new List<int>();
-            foreach (var rating in _cashMachine.ListOfRatings)
-            {
-                listOfCountsOfBills.Add(new int());
-            }
+            var listOfCountsOfBills = _cashMachine.ListOfBills.Select(bill => new int()).ToList();
 
             var tmpSum = _sum;
 
             var index = cashComboBox.SelectedIndex;
-            listOfCountsOfBills[index] = CalculateBills(listOfCountsOfBills[index], _cashMachine.ListOfRatings[index].Value, 
-                _cashMachine.ListOfRatings[index].Count);
+            listOfCountsOfBills[index] = CalculateBills(_cashMachine.ListOfBills[index].Value, 
+                _cashMachine.ListOfBills[index].Count);
 
             for (var i = listOfCountsOfBills.Count -1; i >= 0; --i)
             {
@@ -51,8 +47,8 @@ namespace CashMachine.View
                 {
                     continue;
                 }
-                var rating = _cashMachine.ListOfRatings[i];
-                listOfCountsOfBills[i] = CalculateBills(listOfCountsOfBills[i], rating.Value, rating.Count);
+                var rating = _cashMachine.ListOfBills[i];
+                listOfCountsOfBills[i] = CalculateBills(rating.Value, rating.Count);
             }
             
             if (_sum != 0)
@@ -64,7 +60,7 @@ namespace CashMachine.View
 
             for (var i = 0; i < listOfCountsOfBills.Count; ++i)
             {
-                _cashMachine.ListOfRatings[i].Count -= listOfCountsOfBills[i];
+                _cashMachine.ListOfBills[i].Count -= listOfCountsOfBills[i];
             }
 
             var stringBuilder = new StringBuilder("Выдано:");
@@ -72,7 +68,7 @@ namespace CashMachine.View
             {
                 if(listOfCountsOfBills[i] != 0)
                 {
-                    stringBuilder.Append($"\n{_cashMachine.ListOfRatings[i].Name} - {listOfCountsOfBills[i]} шт.");
+                    stringBuilder.Append($"\n{_cashMachine.ListOfBills[i].Name} - {listOfCountsOfBills[i]} шт.");
                 }
             }
             stringBuilder.Append($"\nОбщая сумма - {tmpSum} руб.");
@@ -81,9 +77,9 @@ namespace CashMachine.View
             Hide();
         }
 
-        private int CalculateBills(int requestedCountOfBills, int cash, int countOfBills)
+        private int CalculateBills(int cash, int countOfBills)
         {
-            requestedCountOfBills = _sum / cash;
+            var requestedCountOfBills = _sum / cash;
             if (requestedCountOfBills > countOfBills)
             {
                 requestedCountOfBills = countOfBills;

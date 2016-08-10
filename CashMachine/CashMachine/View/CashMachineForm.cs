@@ -6,7 +6,7 @@ namespace CashMachine.View
 {
     public partial class CashMachineForm : Form
     {
-        private Model.CashMachine _cashMachine;
+        private readonly Model.CashMachine _cashMachine;
 
         public CashMachineForm()
         {
@@ -41,7 +41,7 @@ namespace CashMachine.View
         private void infoButton_Click(object sender, EventArgs e)
         {
             var stringBuilder = new StringBuilder("Сейчас в банкомате:");
-            foreach (var rating in _cashMachine.ListOfRatings)
+            foreach (var rating in _cashMachine.ListOfBills)
             {
                 stringBuilder.Append($"\n{rating.Name} - {rating.Count} шт.");
             }
