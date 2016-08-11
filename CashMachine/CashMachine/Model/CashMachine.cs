@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CashMachine.Model.Exceptions;
 
@@ -81,6 +82,25 @@ namespace CashMachine.Model
             var listOfCountsOfBills = ListOfBills.Select(bill => new int()).ToList();
 
             listOfCountsOfBills[index] = CalculateBills(ListOfBills[index].Value, ListOfBills[index].Count);
+            if (listOfCountsOfBills[index] == ListOfBills[index].Count && index != ListOfBills.Count - 1 && 
+                ListOfBills[index].Count * ListOfBills[index].Value != _sum)
+            {
+                var tmpIndex = index + 1;
+                while (tmpIndex < ListOfBills.Count)
+                {
+                    if ((ListOfBills[index].Value*ListOfBills[index].Count +
+                         ListOfBills[tmpIndex].Value*ListOfBills[tmpIndex].Count) >= _sum)
+                    {
+                        break;
+                    }
+                    ++tmpIndex;
+                }
+
+                double remainder = _sum % ListOfBills[tmpIndex].Value;
+                var leastCommonMiltiple = GetLeastCommonMultiple(ListOfBills[index].Value, ListOfBills[tmpIndex].Value);
+                listOfCountsOfBills[index] -= (int)Math.Ceiling((leastCommonMiltiple - remainder)/ListOfBills[index].Value);
+            }
+            _sum -= listOfCountsOfBills[index] * ListOfBills[index].Value;
 
             for (var i = listOfCountsOfBills.Count - 1; i >= 0; --i)
             {
@@ -90,6 +110,7 @@ namespace CashMachine.Model
                 }
                 var bill = ListOfBills[i];
                 listOfCountsOfBills[i] = CalculateBills(bill.Value, bill.Count);
+                _sum -= listOfCountsOfBills[i] * bill.Value;
             }
 
             if (_sum != 0)
@@ -111,13 +132,25 @@ namespace CashMachine.Model
             {
                 requestedCountOfBills = countOfBills;
             }
-            _sum -= requestedCountOfBills * cash;
             return requestedCountOfBills;
         }
 
         private bool CheckToFullness(int countOfBills, int curentCountOfBills)
         {
             return countOfBills + curentCountOfBills <= MaxCountOfBills;
+        }
+
+        private static int GetLeastCommonMultiple(int firstInputNumber, int secondInputNumber)
+        {
+            var firstNumber = firstInputNumber;
+            var secondNumber = secondInputNumber;
+            while (secondNumber != 0)
+            {
+                var tmp = firstNumber;
+                firstNumber = secondNumber;
+                secondNumber = tmp % secondNumber;
+            }
+            return (firstInputNumber * secondInputNumber) / firstNumber;
         }
     }
 }
